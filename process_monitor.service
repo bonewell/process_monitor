@@ -1,0 +1,8 @@
+[Unit]
+Description=Process Monitor service
+
+[Service]
+ExecStart=/usr/local/bin/process_monitor bash /var/log/process_monitor.log
+
+[Install]
+WantedBy=multi-user.target

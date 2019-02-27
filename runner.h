@@ -14,13 +14,12 @@ public:
     using ProcessNames = std::vector<std::string>;
 
     Runner(ProcessNames names, std::string logs);
-    int Start();
+    void Run();
     void Stop();
 
 private:
     using Processes = std::list<Process>;
 
-    void Run();
     ProcessNames names_;
     Logger logger_;
     Processes processes_;

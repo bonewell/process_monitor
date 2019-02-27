@@ -12,21 +12,6 @@ Runner::Runner(Runner::ProcessNames names, std::string logs)
 {
 }
 
-int Runner::Start()
-{
-    constexpr int nochdir{1};  // keep work directory
-    constexpr int noclose{0};  // disable std output
-
-    auto res = daemon(nochdir, noclose);
-    if (res != 0) {
-        perror(strerror(errno));
-        return res;
-    }
-    Run();
-
-    return 0;
-}
-
 void Runner::Run()
 {
     std::thread logger_thread{&Logger::Run, std::ref(logger_)};

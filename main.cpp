@@ -15,5 +15,7 @@ int main(int argc, char *argv[])
     }
     const auto logs = argv[argc-1];
 
-    return Runner{names, logs}.Start();
+    Runner{names, logs}.Run();
+
+    return 0;
 }

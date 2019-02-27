@@ -9,3 +9,6 @@ add_executable(${PROJECT_NAME}
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${PROJECT_NAME} pthread)
+
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+install(FILES ${PROJECT_NAME}.service DESTINATION lib/systemd/system)
