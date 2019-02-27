@@ -7,7 +7,6 @@
 #include <mutex>
 #include <queue>
 #include <string>
-#include <thread>
 
 class Logger
 {
