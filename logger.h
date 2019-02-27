@@ -22,7 +22,7 @@ private:
     std::ofstream ofs_;
     std::mutex m_;
     std::condition_variable cv_;
-    std::atomic_bool running{true};
+    std::atomic_bool running_{false};
 };
 
 #endif // LOGGER_H

@@ -13,19 +13,22 @@ void Logger::Report(std::string message)
 
 void Logger::Stop()
 {
-    running = false;
+    running_ = false;
 }
 
 void Logger::Run()
 {
-    while (running) {
+    running_ = true;
+    while (running_) {
         std::unique_lock<std::mutex> lock{m_};
         if (!messages_.empty()) {
-            ofs_ << messages_.front() << "\n";
+            lock.unlock();
+            ofs_ << messages_.front() << std::endl;
+            lock.lock();
             messages_.pop();
         } else {
             cv_.wait(lock, [this] {
-                return !(this->running && this->messages_.empty());
+                return !(this->running_ && this->messages_.empty());
             });
         }
     }

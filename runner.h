@@ -1,8 +1,9 @@
 #ifndef RUNNER_H
 #define RUNNER_H
 
-#include <vector>
+#include <list>
 #include <string>
+#include <vector>
 
 #include "logger.h"
 #include "process.h"
@@ -11,13 +12,15 @@ class Runner
 {
 public:
     using ProcessNames = std::vector<std::string>;
-    using Processes = std::vector<Process>;
 
     Runner(ProcessNames names, std::string logs);
-    int Run();
+    int Start();
     void Stop();
 
 private:
+    using Processes = std::list<Process>;
+
+    void Run();
     ProcessNames names_;
     Logger logger_;
     Processes processes_;

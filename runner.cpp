@@ -1,6 +1,5 @@
 #include "runner.h"
 
-#include <iostream>
 #include <thread>
 
 #include <unistd.h>
@@ -13,30 +12,34 @@ Runner::Runner(Runner::ProcessNames names, std::string logs)
 {
 }
 
-int Runner::Run()
+int Runner::Start()
 {
-    constexpr int nochdir{0};
-    constexpr int noclose{0};
+    constexpr int nochdir{1};  // keep work directory
+    constexpr int noclose{0};  // disable std output
 
     auto res = daemon(nochdir, noclose);
     if (res != 0) {
         perror(strerror(errno));
         return res;
-    } else {
-        std::thread logger_thread{&Logger::Run, std::ref(logger_)};
-        std::vector<std::thread> process_threads;
-        for (const auto& name: names_) {
-            processes_.emplace_back(name, logger_);
-            process_threads.emplace_back(&Process::Monitor,
-                                         std::ref(processes_.back()));
-        }
-        for (auto& t: process_threads) {
-            t.join();
-        }
-        logger_thread.join();
     }
+    Run();
 
     return 0;
+}
+
+void Runner::Run()
+{
+    std::thread logger_thread{&Logger::Run, std::ref(logger_)};
+    std::vector<std::thread> process_threads;
+    for (const auto& name: names_) {
+        processes_.emplace_back(name, logger_);
+        process_threads.emplace_back(&Process::Monitor,
+                                     std::ref(processes_.back()));
+    }
+    for (auto& t: process_threads) {
+        t.join();
+    }
+    logger_thread.join();
 }
 
 void Runner::Stop()
