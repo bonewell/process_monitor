@@ -6,25 +6,22 @@
 #include <errno.h>
 #include <string.h>
 
-Runner::Runner(Runner::ProcessNames names, std::string logs)
-    : names_{std::move(names)},
-      logger_{std::move(logs)}
+Runner::Runner(Runner::ProcessNames names)
+    : names_{std::move(names)}
 {
 }
 
 void Runner::Run()
 {
-    std::thread logger_thread{&Logger::Run, std::ref(logger_)};
     std::vector<std::thread> process_threads;
     for (const auto& name: names_) {
-        processes_.emplace_back(name, logger_);
+        processes_.emplace_back(name);
         process_threads.emplace_back(&Process::Monitor,
                                      std::ref(processes_.back()));
     }
     for (auto& t: process_threads) {
         t.join();
     }
-    logger_thread.join();
 }
 
 void Runner::Stop()
@@ -32,5 +29,4 @@ void Runner::Stop()
     for (auto& p: processes_) {
         p.Stop();
     }
-    logger_.Stop();
 }

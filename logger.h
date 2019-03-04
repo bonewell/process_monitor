@@ -1,27 +1,31 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef LOGGER_H_
+#define LOGGER_H_
 
-#include <atomic>
-#include <condition_variable>
-#include <fstream>
-#include <mutex>
-#include <queue>
-#include <string>
+#include "log4cplus/log4cplus.h"
 
-class Logger
-{
-public:
-    explicit Logger(std::string file);
-    void Report(std::string message);
-    void Run();
-    void Stop();
+#define LOGGER_INIT(file) \
+  ::log4cplus::Initializer initializer; \
+  ::log4cplus::PropertyConfigurator::doConfigure(file)
 
-private:
-    std::queue<std::string> messages_;
-    std::ofstream ofs_;
-    std::mutex m_;
-    std::condition_variable cv_;
-    std::atomic_bool running_{false};
-};
+#define LOGGER_INSTANCE(name) \
+  ::log4cplus::Logger logger = ::log4cplus::Logger::getInstance(name)
 
-#endif // LOGGER_H
+#define LOGGER_TRACE() \
+  LOG4CPLUS_TRACE_METHOD(logger, __func__)
+
+#define LOGGER_DEBUG(message) \
+  LOG4CPLUS_DEBUG(logger, message)
+
+#define LOGGER_INFO(message) \
+  LOG4CPLUS_INFO(logger, message)
+
+#define LOGGER_WARN(message) \
+  LOG4CPLUS_WARN(logger, message)
+
+#define LOGGER_ERROR(message) \
+  LOG4CPLUS_ERROR(logger, message)
+
+#define LOGGER_FATAL(message) \
+  LOG4CPLUS_FATAL(logger, message)
+
+#endif  // LOGGER_H_

@@ -1,7 +1,12 @@
-# Build
+# Prepare
 ```Shell
 mkdir build
 cd build
+conan install ..
+```
+
+# Build
+```Shell
 cmake ..
 make
 ```

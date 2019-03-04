@@ -6,14 +6,12 @@
 #include <set>
 #include <unordered_map>
 
-class Logger;
-
 class Process
 {
 public:
     using Pids = std::set<int>;
 
-    Process(std::string name, Logger& logger);
+    explicit Process(std::string name);
     void Monitor();
     void Stop();
 
@@ -30,7 +28,6 @@ private:
     void OnMemoryChanged(int pid, long long);
 
     std::string name_;
-    Logger& logger_;
     std::atomic_bool running_{false};
     Pids pids_;
     Memory mems_;

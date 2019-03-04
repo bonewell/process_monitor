@@ -2,7 +2,8 @@
 Description=Process Monitor service
 
 [Service]
-ExecStart=/usr/local/bin/process_monitor bash /var/log/process_monitor.log
+WorkingDirectory=/usr/local/etc/process_monitor
+ExecStart=/usr/local/bin/process_monitor bash
 
 [Install]
 WantedBy=multi-user.target

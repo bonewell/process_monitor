@@ -11,6 +11,8 @@
 
 #include "logger.h"
 
+static LOGGER_INSTANCE("Process");
+
 namespace {
 const auto kProc = "/proc";
 const auto kMemoryLimit = 1000000;  // bytes
@@ -31,9 +33,8 @@ Process::Pids operator-(const Process::Pids& a, const Process::Pids& b)
     return minus(a, b);
 }
 
-Process::Process(std::string name, Logger &logger)
-    : name_{std::move(name)},
-      logger_{logger}
+Process::Process(std::string name)
+    : name_{std::move(name)}
 {
 }
 
@@ -100,20 +101,20 @@ Process::Memory Process::MemoryHandle(const Pids& pids)
 void Process::OnStarted(Pids pids)
 {
     for (auto p: pids) {
-        logger_.Report(name_ + " (" + std::to_string(p) + "): started");
+        LOGGER_INFO(name_ << " (" << p << "): started");
     }
 }
 
 void Process::OnFinished(Pids pids)
 {
     for (auto p: pids) {
-        logger_.Report(name_ + " (" + std::to_string(p) + "): finished");
+        LOGGER_INFO(name_ << " (" << p << "): finished");
     }
 }
 
 void Process::OnMemoryChanged(int pid, long long value)
 {
-    logger_.Report(name_ + " (" + std::to_string(pid) + "): memory changed " + std::to_string(value));
+    LOGGER_INFO(name_ << " (" << pid << "): memory changed " << value);
 }
 
 long long Process::GetMemory(int pid) const

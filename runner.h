@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "logger.h"
 #include "process.h"
 
 class Runner
@@ -13,7 +12,7 @@ class Runner
 public:
     using ProcessNames = std::vector<std::string>;
 
-    Runner(ProcessNames names, std::string logs);
+    explicit Runner(ProcessNames names);
     void Run();
     void Stop();
 
@@ -21,7 +20,6 @@ private:
     using Processes = std::list<Process>;
 
     ProcessNames names_;
-    Logger logger_;
     Processes processes_;
 };
 
