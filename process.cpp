@@ -40,6 +40,12 @@ Process::Process(std::string name)
 {
 }
 
+Process::Process(std::string name, std::unique_ptr<Reader> reader)
+    : name_{std::move(name)},
+      reader_{std::move(reader)}
+{
+}
+
 Process::~Process() = default;
 
 void Process::Stop()

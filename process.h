@@ -15,6 +15,7 @@ public:
     using Pids = std::set<int>;
 
     explicit Process(std::string name);
+    Process(std::string name, std::unique_ptr<Reader> reader);
     ~Process();
     void Monitor();
     void Stop();
