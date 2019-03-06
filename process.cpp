@@ -65,6 +65,7 @@ Process::Pids Process::Find() const
             pids.insert(std::stoi(name));
         }
     }
+    reader_->Rewind();
     return pids;
 }
 
@@ -74,7 +75,6 @@ void Process::Monitor()
     running_ = true;
     while (running_) {
         Handle(Find());
-        reader_->Rewind();
         std::this_thread::sleep_for(timeout);
     }
 }

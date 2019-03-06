@@ -18,18 +18,29 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 enable_testing()
-set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
-add_executable(${PROJECT_TEST_NAME}
+set(UNIT_TEST ${PROJECT_NAME}_test)
+add_executable(${UNIT_TEST}
     "process.cpp"
     "dirreader.cpp"
     "process_test.cpp"
 )
-target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_11)
-target_link_libraries(${PROJECT_TEST_NAME}
+target_compile_features(${UNIT_TEST} PRIVATE cxx_std_11)
+target_link_libraries(${UNIT_TEST}
     CONAN_PKG::gtest
     CONAN_PKG::log4cplus
 )
-add_test(NAME ${PROJECT_TEST_NAME} COMMAND ${PROJECT_TEST_NAME})
+add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
+
+set(AUTO_TEST ${PROJECT_NAME}_autotest)
+add_executable(${AUTO_TEST}
+    "dirreader.cpp"
+    "dirreader_test.cpp"
+)
+target_compile_features(${AUTO_TEST} PRIVATE cxx_std_11)
+target_link_libraries(${AUTO_TEST}
+    CONAN_PKG::gtest
+)
+add_test(NAME ${AUTO_TEST} COMMAND ${AUTO_TEST})
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 install(FILES ${PROJECT_NAME}.service DESTINATION lib/systemd/system)
