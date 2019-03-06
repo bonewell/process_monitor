@@ -2,9 +2,12 @@
 #define PROCESS_H
 
 #include <atomic>
+#include <memory>
 #include <string>
 #include <set>
 #include <unordered_map>
+
+class Reader;
 
 class Process
 {
@@ -12,6 +15,7 @@ public:
     using Pids = std::set<int>;
 
     explicit Process(std::string name);
+    ~Process();
     void Monitor();
     void Stop();
 
@@ -33,6 +37,7 @@ private:
     std::atomic_bool running_{false};
     Pids pids_;
     Memory mems_;
+    std::unique_ptr<Reader> reader_;
 };
 
 #endif // PROCESS_H

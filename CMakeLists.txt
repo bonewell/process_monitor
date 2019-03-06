@@ -8,6 +8,7 @@ conan_basic_setup(TARGETS)
 add_executable(${PROJECT_NAME}
     "main.cpp"
     "runner.cpp"
+    "dirreader.cpp"
     "process.cpp"
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
@@ -20,6 +21,7 @@ enable_testing()
 set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
 add_executable(${PROJECT_TEST_NAME}
     "process.cpp"
+    "dirreader.cpp"
     "process_test.cpp"
 )
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_11)

@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 #include "logger.h"
+#include "dirreader.h"
 
 static LOGGER_INSTANCE("Process");
 
@@ -34,9 +35,12 @@ Process::Pids operator-(const Process::Pids& a, const Process::Pids& b)
 }
 
 Process::Process(std::string name)
-    : name_{std::move(name)}
+    : name_{std::move(name)},
+      reader_{new DirReader{kProc}}
 {
 }
+
+Process::~Process() = default;
 
 void Process::Stop()
 {
@@ -55,14 +59,12 @@ bool Process::IsMy(const std::string& pid) const
 Process::Pids Process::Find() const
 {
     Pids pids;
-    auto* dirp = opendir(kProc);
-    dirent* dp{nullptr};
-    while ((dp = readdir(dirp)) != nullptr) {
-        if (std::regex_match(dp->d_name, kPid) && IsMy(dp->d_name)) {
-            pids.insert(std::stoi(dp->d_name));
+    while (reader_->HasNext()) {
+        auto name = reader_->Next();
+        if (std::regex_match(name, kPid) && IsMy(name)) {
+            pids.insert(std::stoi(name));
         }
     }
-    closedir(dirp);
     return pids;
 }
 
@@ -72,6 +74,7 @@ void Process::Monitor()
     running_ = true;
     while (running_) {
         Handle(Find());
+        reader_->Rewind();
         std::this_thread::sleep_for(timeout);
     }
 }
