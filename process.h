@@ -15,12 +15,14 @@ public:
     void Monitor();
     void Stop();
 
+protected:
+    Pids Find() const;
+
 private:
     using Memory = std::unordered_map<int, long long>;
 
     bool IsMy(const std::string& pid) const;
     long long GetMemory(int pid) const;
-    Pids Find() const;
     void Handle(Pids pids);
     Memory MemoryHandle(const Pids& pids);
     void OnStarted(Pids pids);

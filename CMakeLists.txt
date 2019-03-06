@@ -19,11 +19,13 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
 add_executable(${PROJECT_TEST_NAME}
-    "test_process.cpp"
+    "process.cpp"
+    "process_test.cpp"
 )
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${PROJECT_TEST_NAME}
     CONAN_PKG::gtest
+    CONAN_PKG::log4cplus
 )
 add_test(NAME ${PROJECT_TEST_NAME} COMMAND ${PROJECT_TEST_NAME})
 
