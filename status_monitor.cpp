@@ -40,9 +40,11 @@ void StatusMonitor::Scan()
     table_.Rewind();
     while (table_.HasNext()) {
         auto info = table_.Next();
-        if (IsFollowed(info.name)) {
+        if (ShouldBeFollowed(info.name)) {
             pids.insert(info.pid);
-            Notify(info.pid, TypeEvent::kStarted);
+            if (!IsAlreadyFollowed(info.pid)) {
+                Notify(info.pid, TypeEvent::kStarted);
+            }
         }
         pids_.erase(info.pid);
     }
@@ -58,7 +60,12 @@ void StatusMonitor::NotifyAboutFinished() const
     });
 }
 
-bool StatusMonitor::IsFollowed(const std::string& name) const
+bool StatusMonitor::ShouldBeFollowed(const std::string& name) const
 {
     return names_.find(name) != std::end(names_);
+}
+
+bool StatusMonitor::IsAlreadyFollowed(int pid) const
+{
+    return pids_.find(pid) != std::end(pids_);
 }
