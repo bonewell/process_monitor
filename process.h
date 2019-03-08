@@ -7,7 +7,7 @@
 #include <set>
 #include <unordered_map>
 
-class Reader;
+class ProcessTable;
 
 class Process
 {
@@ -15,7 +15,7 @@ public:
     using Pids = std::set<int>;
 
     explicit Process(std::string name);
-    Process(std::string name, std::unique_ptr<Reader> reader);
+    Process(std::string name, std::unique_ptr<ProcessTable> reader);
     ~Process();
     void Monitor();
     void Stop();
@@ -38,7 +38,7 @@ private:
     std::atomic_bool running_{false};
     Pids pids_;
     Memory mems_;
-    std::unique_ptr<Reader> reader_;
+    std::unique_ptr<ProcessTable> reader_;
 };
 
 #endif // PROCESS_H

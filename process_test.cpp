@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "mock_reader.h"
+#include "mock_process_table.h"
 #include "testable_process.h"
 
 using ::testing::Eq;
@@ -23,8 +23,8 @@ private:
 
 TEST(ProcessTest, Find)
 {
-    MockReader* mock_reader_ptr = new MockReader{};
-    std::unique_ptr<Reader> reader{mock_reader_ptr};
+    MockProcessTable* mock_reader_ptr = new MockProcessTable{};
+    std::unique_ptr<ProcessTable> reader{mock_reader_ptr};
     TestableProcess ps{"bash", std::move(reader)};
 
     Proc proc;

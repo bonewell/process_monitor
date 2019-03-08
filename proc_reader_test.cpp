@@ -4,22 +4,27 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "dirreader.h"
+#include "proc_reader.h"
 
 using namespace ::testing;
 
-std::vector<std::string> read(DirReader& reader)
+bool operator==(const ProcessInfo& a, const ProcessInfo& b)
 {
-    std::vector<std::string> items;
+    return a.pid == b.pid;
+}
+
+std::vector<ProcessInfo> read(ProcReader& reader)
+{
+    std::vector<ProcessInfo> items;
     while (reader.HasNext()) {
         items.push_back(reader.Next());
     }
     return items;
 }
 
-TEST(DirReaderTest, RewindProc)
+TEST(ProcReaderTest, RewindProc)
 {
-    DirReader reader{"/proc"};
+    ProcReader reader{};
     auto before = read(reader);
     std::system("sleep 5 &");
     reader.Rewind();

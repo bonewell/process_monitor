@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #include "logger.h"
-#include "dirreader.h"
+#include "proc_reader.h"
 
 static LOGGER_INSTANCE("Process");
 
@@ -36,11 +36,11 @@ Process::Pids operator-(const Process::Pids& a, const Process::Pids& b)
 
 Process::Process(std::string name)
     : name_{std::move(name)},
-      reader_{new DirReader{kProc}}
+      reader_{new ProcReader{}}
 {
 }
 
-Process::Process(std::string name, std::unique_ptr<Reader> reader)
+Process::Process(std::string name, std::unique_ptr<ProcessTable> reader)
     : name_{std::move(name)},
       reader_{std::move(reader)}
 {
@@ -53,22 +53,13 @@ void Process::Stop()
     running_ = false;
 }
 
-bool Process::IsMy(const std::string& pid) const
-{
-    const auto file = std::string{kProc} + "/" + pid + "/comm";
-    std::ifstream ifs{file};
-    std::string bin;
-    ifs >> bin;
-    return bin == name_;
-}
-
 Process::Pids Process::Find() const
 {
     Pids pids;
     while (reader_->HasNext()) {
-        auto name = reader_->Next();
-        if (std::regex_match(name, kPid) && IsMy(name)) {
-            pids.insert(std::stoi(name));
+        auto info = reader_->Next();
+        if (info.name == name_) {
+            pids.insert(info.pid);
         }
     }
     reader_->Rewind();
