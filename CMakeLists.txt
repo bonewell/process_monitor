@@ -6,11 +6,12 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 add_executable(${PROJECT_NAME}
+    "loop.cpp"
     "main.cpp"
-    "runner.cpp"
-    "status_monitor.cpp"
     "proc_reader.cpp"
     "process.cpp"
+    "signals.cpp"
+    "status_monitor.cpp"
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${PROJECT_NAME}

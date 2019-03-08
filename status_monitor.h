@@ -3,7 +3,6 @@
 
 #include <string>
 #include <unordered_set>
-#include <vector>
 
 class ProcessTable;
 class StatusListener;
@@ -12,12 +11,13 @@ enum class TypeEvent;
 class StatusMonitor
 {
 public:
-    using Listeners = std::vector<StatusListener*>;
+    using Listeners = std::unordered_set<StatusListener*>;
     using Names = std::unordered_set<std::string>;
     using Pids = std::unordered_set<int>;
 
     StatusMonitor(ProcessTable& table, Names names);
-    void Subscribe(StatusListener& listener);
+    void Subscribe(StatusListener* listener);
+    void Unsubscribe(StatusListener* listener);
     void Scan();
 
 private:

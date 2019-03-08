@@ -29,7 +29,7 @@ TEST(StatusMonitorTest, ProcessStarted)
     ON_CALL(ps, Next()).WillByDefault(Return(ProcessInfo{5, "bash"}));
 
     MockStatusListener listener;
-    monitor.Subscribe(listener);
+    monitor.Subscribe(&listener);
 
     EXPECT_CALL(listener, OnStarted(5));
     monitor.Scan();
@@ -46,7 +46,7 @@ TEST(StatusMonitorTest, ProcessFinished)
     monitor.Scan();  // find process started
 
     MockStatusListener listener;
-    monitor.Subscribe(listener);
+    monitor.Subscribe(&listener);
 
     EXPECT_CALL(listener, OnFinished(5));
     monitor.Scan();

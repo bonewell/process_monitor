@@ -13,9 +13,14 @@ StatusMonitor::StatusMonitor(ProcessTable& table, Names names)
 {
 }
 
-void StatusMonitor::Subscribe(StatusListener& listener)
+void StatusMonitor::Subscribe(StatusListener* listener)
 {
-    listeners_.push_back(&listener);
+    listeners_.insert(listener);
+}
+
+void StatusMonitor::Unsubscribe(StatusListener* listener)
+{
+    listeners_.erase(listener);
 }
 
 void StatusMonitor::Notify(int pid, TypeEvent event) const
