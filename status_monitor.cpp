@@ -5,6 +5,12 @@
 #include "process_table.h"
 #include "status_listener.h"
 
+namespace {
+inline bool IsNotPresented(const StatusMonitor::Pids& pids, int pid) {
+    return pids.find(pid) == std::end(pids);
+}
+}
+
 enum class TypeEvent { kStarted, kFinished };
 
 StatusMonitor::StatusMonitor(ProcessTable& table, Names names)
@@ -36,36 +42,46 @@ void StatusMonitor::Notify(int pid, TypeEvent event) const
 
 void StatusMonitor::Scan()
 {
+    auto pids = Collect();
+    NotifyAboutStarted(pids);
+    NotifyAboutFinished(pids);
+    swap(pids_, pids);
+}
+
+StatusMonitor::Pids StatusMonitor::Collect() const
+{
     Pids pids;
     table_.Rewind();
     while (table_.HasNext()) {
         auto info = table_.Next();
-        if (ShouldBeFollowed(info.name)) {
+        if (IsInteresting(info.name)) {
             pids.insert(info.pid);
-            if (!IsAlreadyFollowed(info.pid)) {
-                Notify(info.pid, TypeEvent::kStarted);
-            }
         }
-        pids_.erase(info.pid);
     }
-    NotifyAboutFinished();
-    swap(pids_, pids);
+    return pids;
 }
 
-void StatusMonitor::NotifyAboutFinished() const
+void StatusMonitor::NotifyAboutStarted(const Pids& fresh_pids) const
 {
-    std::for_each(std::begin(pids_), std::end(pids_),
-                  [this](int pid) {
-        Notify(pid, TypeEvent::kFinished);
+    std::for_each(std::begin(fresh_pids), std::end(fresh_pids),
+                  [this](int fresh_id) {
+        if (IsNotPresented(pids_, fresh_id)) {
+            Notify(fresh_id, TypeEvent::kStarted);
+        }
     });
 }
 
-bool StatusMonitor::ShouldBeFollowed(const std::string& name) const
+void StatusMonitor::NotifyAboutFinished(const Pids& fresh_pids) const
 {
-    return names_.find(name) != std::end(names_);
+    std::for_each(std::begin(pids_), std::end(pids_),
+                  [this, &fresh_pids](int id) {
+        if (IsNotPresented(fresh_pids, id)) {
+            Notify(id, TypeEvent::kFinished);
+        }
+    });
 }
 
-bool StatusMonitor::IsAlreadyFollowed(int pid) const
+bool StatusMonitor::IsInteresting(const std::string& name) const
 {
-    return pids_.find(pid) != std::end(pids_);
+    return names_.find(name) != std::end(names_);
 }

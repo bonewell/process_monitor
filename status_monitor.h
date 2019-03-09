@@ -21,10 +21,11 @@ public:
     void Scan();
 
 private:
-    inline bool ShouldBeFollowed(const std::string& name) const;
-    inline bool IsAlreadyFollowed(int pid) const;
-    void NotifyAboutFinished() const;
-    void Notify(int pid, TypeEvent event) const;
+    inline Pids Collect() const;
+    inline bool IsInteresting(const std::string& name) const;
+    inline void NotifyAboutStarted(const Pids& pids) const;
+    inline void NotifyAboutFinished(const Pids& pids) const;
+    inline void Notify(int pid, TypeEvent event) const;
     ProcessTable& table_;
     Names names_;
     Listeners listeners_;

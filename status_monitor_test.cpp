@@ -16,11 +16,8 @@ class ReturnHasNext {
 public:
     explicit ReturnHasNext(std::initializer_list<bool> has_next)
         : has_next_{has_next}, it_{std::begin(has_next_)} {}
-    bool operator() () {
-        auto v = *it_;
-        ++it_;
-        return v;
-    }
+    bool operator() () { return *it_++; }
+private:
     std::vector<bool> has_next_;
     std::vector<bool>::iterator it_;
 };
