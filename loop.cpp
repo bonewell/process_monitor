@@ -1,9 +1,7 @@
 #include "loop.h"
 
-#include <thread>
-#include <string.h>
-
 #include "logger.h"
+#include "memory_monitor.h"
 #include "status_monitor.h"
 #include "process_table.h"
 
@@ -32,18 +30,6 @@ void Loop::Run()
     monitor_.Unsubscribe(this);
 }
 
-//{
-//    std::vector<std::thread> process_threads;
-//    for (const auto& name: names_) {
-//        processes_.emplace_back(name);
-//        process_threads.emplace_back(&Process::Monitor,
-//                                     std::ref(processes_.back()));
-//    }
-//    for (auto& t: process_threads) {
-//        t.join();
-//    }
-//}
-
 void Loop::Stop()
 {
     running_ = false;
@@ -54,10 +40,18 @@ void Loop::OnStarted(int pid)
 {
     constexpr auto name = "<name>";
     LOGGER_INFO(name << " (" << pid << "): started");
+    ps_.emplace(pid, std::unique_ptr<Process>{new Process{pid, *this}});
 }
 
 void Loop::OnFinished(int pid)
 {
     constexpr auto name = "<name>";
     LOGGER_INFO(name << " (" << pid << "): finished");
+    ps_.erase(pid);
+}
+
+void Loop::OnMemoryChanged(int pid, long long value)
+{
+    constexpr auto name = "<name>";
+    LOGGER_INFO(name << " (" << pid << "): memory changed " << value);
 }

@@ -8,6 +8,8 @@ conan_basic_setup(TARGETS)
 add_executable(${PROJECT_NAME}
     "loop.cpp"
     "main.cpp"
+    "memory_monitor.cpp"
+    "proc_memory.cpp"
     "proc_reader.cpp"
     "process.cpp"
     "signals.cpp"
@@ -22,6 +24,8 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 set(UNIT_TEST ${PROJECT_NAME}_unittest)
 add_executable(${UNIT_TEST}
+    "memory_monitor.cpp"
+    "memory_monitor_test.cpp"
     "status_monitor.cpp"
     "status_monitor_test.cpp"
 )
@@ -33,6 +37,8 @@ add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
 
 set(AUTO_TEST ${PROJECT_NAME}_autotest)
 add_executable(${AUTO_TEST}
+    "proc_memory.cpp"
+    "proc_memory_test.cpp"
     "proc_reader.cpp"
     "proc_reader_test.cpp"
 )

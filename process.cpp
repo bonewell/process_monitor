@@ -1,127 +1,30 @@
 #include "process.h"
 
-#include <algorithm>
-#include <iterator>
-#include <regex>
-#include <thread>
-
-#include <dirent.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#include "logger.h"
+#include "loop.h"
+#include "memory_listener.h"
 #include "proc_reader.h"
 
-static LOGGER_INSTANCE("Process");
-
-namespace {
-const auto kProc = "/proc";
-const auto kMemoryLimit = 1000000;  // bytes
-const std::regex kPid{R"([0-9]+)"};
-
-Process::Pids minus(const Process::Pids& a, const Process::Pids& b)
+Process::Process(int pid, Loop& loop)
+    : pid_{pid},
+      loop_{loop}
 {
-    Process::Pids diff;
-    std::set_difference(std::begin(a), std::end(a),
-                        std::begin(b), std::end(b),
-                        std::inserter(diff, std::begin(diff)));
-    return diff;
-}
+    thread_ = std::thread{&Process::Run, this};
 }
 
-Process::Pids operator-(const Process::Pids& a, const Process::Pids& b)
-{
-    return minus(a, b);
-}
-
-Process::Process(std::string name)
-    : name_{std::move(name)},
-      reader_{new ProcReader{}}
-{
-}
-
-Process::Process(std::string name, std::unique_ptr<ProcessTable> reader)
-    : name_{std::move(name)},
-      reader_{std::move(reader)}
-{
-}
-
-Process::~Process() = default;
-
-void Process::Stop()
+Process::~Process()
 {
     running_ = false;
+    thread_.join();
 }
 
-Process::Pids Process::Find() const
-{
-    Pids pids;
-    while (reader_->HasNext()) {
-        auto info = reader_->Next();
-        if (info.name == name_) {
-            pids.insert(info.pid);
-        }
-    }
-    reader_->Rewind();
-    return pids;
-}
-
-void Process::Monitor()
+void Process::Run()
 {
     constexpr auto timeout = std::chrono::milliseconds(500);
+
+//    ProcMemory m;
     running_ = true;
     while (running_) {
-        Handle(Find());
+
         std::this_thread::sleep_for(timeout);
     }
-}
-
-void Process::Handle(Pids pids)
-{
-    OnStarted(pids - pids_);
-    OnFinished(pids_ - pids);
-    mems_ = MemoryHandle(pids);
-    pids_ = std::move(pids);
-}
-
-Process::Memory Process::MemoryHandle(const Pids& pids)
-{
-    Memory mems;
-    for (auto p: pids) {
-        auto old = mems_[p];
-        auto memory = GetMemory(p);
-        if (abs(memory - old) > kMemoryLimit) {
-            OnMemoryChanged(p, memory);
-        }
-        mems[p] = memory;
-    }
-    return mems;
-}
-
-void Process::OnStarted(Pids pids)
-{
-    for (auto p: pids) {
-        LOGGER_INFO(name_ << " (" << p << "): started");
-    }
-}
-
-void Process::OnFinished(Pids pids)
-{
-    for (auto p: pids) {
-        LOGGER_INFO(name_ << " (" << p << "): finished");
-    }
-}
-
-void Process::OnMemoryChanged(int pid, long long value)
-{
-    LOGGER_INFO(name_ << " (" << pid << "): memory changed " << value);
-}
-
-long long Process::GetMemory(int pid) const
-{
-    const auto file = std::string{kProc} + "/" + std::to_string(pid) + "/statm";
-    std::ifstream ifs{file};
-    long long pages;
-    ifs >> pages;
-    return getpagesize() * pages;
 }
