@@ -8,11 +8,6 @@
 
 using namespace ::testing;
 
-bool operator==(const ProcessInfo& a, const ProcessInfo& b)
-{
-    return a.pid == b.pid;
-}
-
 std::vector<ProcessInfo> read(ProcReader& reader)
 {
     std::vector<ProcessInfo> items;

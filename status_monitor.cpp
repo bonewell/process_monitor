@@ -6,8 +6,9 @@
 #include "status_listener.h"
 
 namespace {
-inline bool IsNotPresented(const StatusMonitor::Pids& pids, int pid) {
-    return pids.find(pid) == std::end(pids);
+inline bool IsNotPresented(const StatusMonitor::Infos& pids,
+                           const ProcessInfo& info) {
+    return pids.find(info) == std::end(pids);
 }
 }
 
@@ -29,13 +30,13 @@ void StatusMonitor::Unsubscribe(StatusListener* listener)
     listeners_.erase(listener);
 }
 
-void StatusMonitor::Notify(int pid, TypeEvent event) const
+void StatusMonitor::Notify(const ProcessInfo& info, TypeEvent event) const
 {
     std::for_each(std::begin(listeners_), std::end(listeners_),
-                  [pid, event](StatusListener* l) {
+                  [&info, event](StatusListener* l) {
         switch (event) {
-            case TypeEvent::kStarted: l->OnStarted(pid); break;
-            case TypeEvent::kFinished: l->OnFinished(pid); break;
+            case TypeEvent::kStarted: l->OnStarted(info); break;
+            case TypeEvent::kFinished: l->OnFinished(info); break;
         }
     });
 }
@@ -53,35 +54,35 @@ std::unique_ptr<Memory> StatusMonitor::GetMemory(int pid)
     return table_.GetMemory(pid);
 }
 
-StatusMonitor::Pids StatusMonitor::Collect() const
+StatusMonitor::Infos StatusMonitor::Collect() const
 {
-    Pids pids;
+    Infos pids;
     table_.Rewind();
     while (table_.HasNext()) {
         auto info = table_.Next();
         if (IsInteresting(info.name)) {
-            pids.insert(info.pid);
+            pids.insert(info);
         }
     }
     return pids;
 }
 
-void StatusMonitor::NotifyAboutStarted(const Pids& fresh_pids) const
+void StatusMonitor::NotifyAboutStarted(const Infos& fresh_pids) const
 {
     std::for_each(std::begin(fresh_pids), std::end(fresh_pids),
-                  [this](int fresh_id) {
-        if (IsNotPresented(pids_, fresh_id)) {
-            Notify(fresh_id, TypeEvent::kStarted);
+                  [this](const ProcessInfo& fresh_info) {
+        if (IsNotPresented(pids_, fresh_info)) {
+            Notify(fresh_info, TypeEvent::kStarted);
         }
     });
 }
 
-void StatusMonitor::NotifyAboutFinished(const Pids& fresh_pids) const
+void StatusMonitor::NotifyAboutFinished(const Infos& fresh_pids) const
 {
     std::for_each(std::begin(pids_), std::end(pids_),
-                  [this, &fresh_pids](int id) {
-        if (IsNotPresented(fresh_pids, id)) {
-            Notify(id, TypeEvent::kFinished);
+                  [this, &fresh_pids](const ProcessInfo& info) {
+        if (IsNotPresented(fresh_pids, info)) {
+            Notify(info, TypeEvent::kFinished);
         }
     });
 }

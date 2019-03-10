@@ -3,13 +3,9 @@
 
 #include <memory>
 #include <string>
+#include "process_info.h"
 
 class Memory;
-
-struct ProcessInfo {
-    int pid;
-    std::string name;
-};
 
 class ProcessTable
 {

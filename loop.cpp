@@ -33,18 +33,16 @@ void Loop::Run()
     monitor_.Unsubscribe(this);
 }
 
-void Loop::OnStarted(int pid)
+void Loop::OnStarted(const ProcessInfo& info)
 {
-    constexpr auto name = "<name>";
-    LOGGER_INFO(name << " (" << pid << "): started");
-    ps_.emplace(pid, std::unique_ptr<Process>{new Process{pid, *this}});
+    LOGGER_INFO(info.name << " (" << info.pid << "): started");
+    ps_.emplace(info.pid, std::unique_ptr<Process>{new Process{info.pid, *this}});
 }
 
-void Loop::OnFinished(int pid)
+void Loop::OnFinished(const ProcessInfo& info)
 {
-    constexpr auto name = "<name>";
-    LOGGER_INFO(name << " (" << pid << "): finished");
-    ps_.erase(pid);
+    LOGGER_INFO(info.name << " (" << info.pid << "): finished");
+    ps_.erase(info.pid);
 }
 
 void Loop::OnMemoryChanged(int pid, long long value)

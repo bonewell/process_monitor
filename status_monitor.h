@@ -6,8 +6,8 @@
 #include <unordered_set>
 
 #include "memory.h"
+#include "process_table.h"
 
-class ProcessTable;
 class StatusListener;
 enum class TypeEvent;
 
@@ -16,7 +16,7 @@ class StatusMonitor
 public:
     using Listeners = std::unordered_set<StatusListener*>;
     using Names = std::unordered_set<std::string>;
-    using Pids = std::unordered_set<int>;
+    using Infos = std::unordered_set<ProcessInfo, ProcessInfoHasher>;
 
     StatusMonitor(ProcessTable& table, Names names);
     void Subscribe(StatusListener* listener);
@@ -25,15 +25,15 @@ public:
     std::unique_ptr<Memory> GetMemory(int pid);
 
 private:
-    inline Pids Collect() const;
+    inline Infos Collect() const;
     inline bool IsInteresting(const std::string& name) const;
-    inline void NotifyAboutStarted(const Pids& pids) const;
-    inline void NotifyAboutFinished(const Pids& pids) const;
-    inline void Notify(int pid, TypeEvent event) const;
+    inline void NotifyAboutStarted(const Infos& pids) const;
+    inline void NotifyAboutFinished(const Infos& pids) const;
+    inline void Notify(const ProcessInfo& info, TypeEvent event) const;
     ProcessTable& table_;
     Names names_;
     Listeners listeners_;
-    Pids pids_;
+    Infos pids_;
 };
 
 #endif // STATUS_MONITOR_H

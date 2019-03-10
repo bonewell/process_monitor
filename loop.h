@@ -18,8 +18,8 @@ class Loop : public StatusListener, public MemoryListener
 public:
     explicit Loop(StatusMonitor& monitor);
     ~Loop() override;
-    void OnStarted(int pid) override;
-    void OnFinished(int pid) override;
+    void OnStarted(const ProcessInfo& info) override;
+    void OnFinished(const ProcessInfo& info) override;
     void OnMemoryChanged(int pid, long long) override;
     std::unique_ptr<Memory> GetMemory(int pid);
 

@@ -29,12 +29,13 @@ TEST(StatusMonitorTest, ProcessStarted)
 
     ReturnHasNext hasNext{true, false};
     ON_CALL(ps, HasNext()).WillByDefault(Invoke(std::ref(hasNext)));
-    ON_CALL(ps, Next()).WillByDefault(Return(ProcessInfo{5, "bash"}));
+    ProcessInfo info{5, "bash"};
+    ON_CALL(ps, Next()).WillByDefault(Return(info));
 
     MockStatusListener listener;
     monitor.Subscribe(&listener);
 
-    EXPECT_CALL(listener, OnStarted(5));
+    EXPECT_CALL(listener, OnStarted(info));
     monitor.Scan();
 }
 
@@ -45,13 +46,14 @@ TEST(StatusMonitorTest, ProcessFinished)
 
     ReturnHasNext hasNext{true, false};
     ON_CALL(ps, HasNext()).WillByDefault(Invoke(std::ref(hasNext)));
-    ON_CALL(ps, Next()).WillByDefault(Return(ProcessInfo{5, "bash"}));
+    ProcessInfo info{5, "bash"};
+    ON_CALL(ps, Next()).WillByDefault(Return(info));
     monitor.Scan();  // find process started
 
     MockStatusListener listener;
     monitor.Subscribe(&listener);
 
-    EXPECT_CALL(listener, OnFinished(5));
+    EXPECT_CALL(listener, OnFinished(info));
     monitor.Scan();
 }
 
@@ -62,12 +64,13 @@ TEST(StatusMonitorTest, ProcessAlreadyStarted)
 
     ReturnHasNext hasNext{true, false, true, false};
     ON_CALL(ps, HasNext()).WillByDefault(Invoke(std::ref(hasNext)));
-    ON_CALL(ps, Next()).WillByDefault(Return(ProcessInfo{5, "bash"}));
+    ProcessInfo info{5, "bash"};
+    ON_CALL(ps, Next()).WillByDefault(Return(info));
 
     MockStatusListener listener;
     monitor.Subscribe(&listener);
 
-    EXPECT_CALL(listener, OnStarted(5)).Times(1);
+    EXPECT_CALL(listener, OnStarted(info)).Times(1);
     monitor.Scan();
     monitor.Scan();
 }

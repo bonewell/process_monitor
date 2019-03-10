@@ -9,6 +9,7 @@ add_executable(${PROJECT_NAME}
     "loop.cpp"
     "main.cpp"
     "memory_monitor.cpp"
+    "process_info.cpp"
     "proc_memory.cpp"
     "proc_reader.cpp"
     "process.cpp"
@@ -26,6 +27,7 @@ set(UNIT_TEST ${PROJECT_NAME}_unittest)
 add_executable(${UNIT_TEST}
     "memory_monitor.cpp"
     "memory_monitor_test.cpp"
+    "process_info.cpp"
     "status_monitor.cpp"
     "status_monitor_test.cpp"
 )
@@ -41,6 +43,7 @@ add_executable(${AUTO_TEST}
     "proc_memory_test.cpp"
     "proc_reader.cpp"
     "proc_reader_test.cpp"
+    "process_info.cpp"
 )
 target_compile_features(${AUTO_TEST} PRIVATE cxx_std_11)
 target_link_libraries(${AUTO_TEST}
