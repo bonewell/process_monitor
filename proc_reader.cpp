@@ -58,9 +58,9 @@ void ProcReader::Rewind()
     rewinddir(dirp_);
 }
 
-std::unique_ptr<Memory> ProcReader::GetMemory(int pid)
+std::unique_ptr<Memory> ProcReader::GetMemory(const ProcessInfo& info)
 {
-    return std::unique_ptr<Memory>{new ProcMemory{pid}};
+    return std::unique_ptr<Memory>{new ProcMemory{info}};
 }
 
 std::string ProcReader::GetName(const std::string& pid) const

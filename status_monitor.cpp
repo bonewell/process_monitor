@@ -49,9 +49,9 @@ void StatusMonitor::Scan()
     swap(pids_, pids);
 }
 
-std::unique_ptr<Memory> StatusMonitor::GetMemory(int pid)
+std::unique_ptr<Memory> StatusMonitor::GetMemory(const ProcessInfo& info)
 {
-    return table_.GetMemory(pid);
+    return table_.GetMemory(info);
 }
 
 StatusMonitor::Infos StatusMonitor::Collect() const

@@ -20,8 +20,8 @@ public:
     ~Loop() override;
     void OnStarted(const ProcessInfo& info) override;
     void OnFinished(const ProcessInfo& info) override;
-    void OnMemoryChanged(int pid, long long) override;
-    std::unique_ptr<Memory> GetMemory(int pid);
+    void OnMemoryChanged(const ProcessInfo& info, long long value) override;
+    std::unique_ptr<Memory> GetMemory(const ProcessInfo& info);
 
 private:
     using Processes = std::unordered_map<int, std::unique_ptr<Process>>;

@@ -10,9 +10,8 @@ namespace {
 const auto kMemoryLimit = 1000000;  // bytes
 }  // namespace
 
-MemoryMonitor::MemoryMonitor(std::unique_ptr<Memory> memory, int pid)
-    : memory_{std::move(memory)},
-      pid_{pid}
+MemoryMonitor::MemoryMonitor(std::unique_ptr<Memory> memory)
+    : memory_{std::move(memory)}
 {
 }
 
@@ -41,6 +40,6 @@ void MemoryMonitor::Notify() const
 {
     std::for_each(std::begin(listeners_), std::end(listeners_),
                   [this](MemoryListener* l) {
-        l->OnMemoryChanged(pid_, total_);
+        l->OnMemoryChanged(memory_->Info(), total_);
     });
 }

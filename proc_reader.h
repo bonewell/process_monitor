@@ -15,7 +15,7 @@ public:
     bool HasNext() override;
     ProcessInfo Next() override;
     void Rewind() override;
-    std::unique_ptr<Memory> GetMemory(int pid) override;
+    std::unique_ptr<Memory> GetMemory(const ProcessInfo& info) override;
 
 private:
     std::string GetName(const std::string& pid) const;

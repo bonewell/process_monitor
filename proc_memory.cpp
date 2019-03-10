@@ -3,18 +3,25 @@
 #include <unistd.h>
 
 namespace {
-const std::string kProc = "/proc";
+const std::string kProc = "/proc/";
+const auto kStatm = "/statm";
 }  // namespace
 
-ProcMemory::ProcMemory(int pid)
+ProcMemory::ProcMemory(ProcessInfo info)
+    : info_{std::move(info)}
 {
-    const auto file = kProc + "/" + std::to_string(pid) + "/statm";
+    const auto file = kProc + std::to_string(info_.pid) + kStatm;
     ifs_.open(file);
 }
 
 ProcMemory::~ProcMemory()
 {
     ifs_.close();
+}
+
+const ProcessInfo &ProcMemory::Info() const
+{
+    return info_;
 }
 
 long long ProcMemory::Total()

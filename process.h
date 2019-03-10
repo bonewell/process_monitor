@@ -4,18 +4,20 @@
 #include <atomic>
 #include <thread>
 
+#include "process_info.h"
+
 class Loop;
 class MemoryMonitor;
 
 class Process
 {
 public:
-    Process(int pid, Loop& loop);
+    Process(const ProcessInfo& info, Loop& loop);
     ~Process();
 
 private:
     void Run();
-    int pid_;
+    ProcessInfo info_;
     Loop& loop_;
     std::atomic_bool running_{false};
     std::thread thread_;

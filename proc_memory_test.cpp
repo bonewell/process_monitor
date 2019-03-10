@@ -7,8 +7,8 @@ using ::testing::Eq;
 
 TEST(ProcMemoryTest, Total)
 {
-    auto pid = getpid();
-    ProcMemory m{pid};
+    ProcessInfo info{getpid(), "bash"};
+    ProcMemory m{info};
     auto v = m.Total();
     EXPECT_THAT(m.Total(), Eq(v));
 }

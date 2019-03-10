@@ -13,7 +13,7 @@ public:
     virtual bool HasNext() = 0;
     virtual ProcessInfo Next() = 0;
     virtual void Rewind() = 0;
-    virtual std::unique_ptr<Memory> GetMemory(int pid) = 0;
+    virtual std::unique_ptr<Memory> GetMemory(const ProcessInfo& info) = 0;
     virtual ~ProcessTable() = default;
 };
 

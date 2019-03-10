@@ -22,7 +22,7 @@ public:
     void Subscribe(StatusListener* listener);
     void Unsubscribe(StatusListener* listener);
     void Scan();
-    std::unique_ptr<Memory> GetMemory(int pid);
+    std::unique_ptr<Memory> GetMemory(const ProcessInfo& info);
 
 private:
     inline Infos Collect() const;

@@ -4,15 +4,18 @@
 #include <fstream>
 
 #include "memory.h"
+#include "process_info.h"
 
 class ProcMemory : public Memory
 {
 public:
-    explicit ProcMemory(int pid);
+    explicit ProcMemory(ProcessInfo info);
     ~ProcMemory() override;
+    const ProcessInfo& Info() const override;
     long long Total() override;
 
 private:
+    ProcessInfo info_;
     std::ifstream ifs_;
 };
 

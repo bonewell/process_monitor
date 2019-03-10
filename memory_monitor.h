@@ -12,7 +12,7 @@ class MemoryMonitor
 public:
     using Listeners = std::unordered_set<MemoryListener*>;
 
-    MemoryMonitor(std::unique_ptr<Memory> memory, int pid);
+    explicit MemoryMonitor(std::unique_ptr<Memory> memory);
     ~MemoryMonitor();
     void Subscribe(MemoryListener* listener);
     void Unsubscribe(MemoryListener* listener);
@@ -21,7 +21,6 @@ public:
 private:
     inline void Notify() const;
     std::unique_ptr<Memory> memory_;
-    int pid_;
     Listeners listeners_;
     long long total_{0};
 };

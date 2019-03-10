@@ -36,7 +36,7 @@ void Loop::Run()
 void Loop::OnStarted(const ProcessInfo& info)
 {
     LOGGER_INFO(info.name << " (" << info.pid << "): started");
-    ps_.emplace(info.pid, std::unique_ptr<Process>{new Process{info.pid, *this}});
+    ps_.emplace(info.pid, std::unique_ptr<Process>{new Process{info, *this}});
 }
 
 void Loop::OnFinished(const ProcessInfo& info)
@@ -45,13 +45,12 @@ void Loop::OnFinished(const ProcessInfo& info)
     ps_.erase(info.pid);
 }
 
-void Loop::OnMemoryChanged(int pid, long long value)
+void Loop::OnMemoryChanged(const ProcessInfo& info, long long value)
 {
-    constexpr auto name = "<name>";
-    LOGGER_INFO(name << " (" << pid << "): memory changed " << value);
+    LOGGER_INFO(info.name << " (" << info.pid << "): memory changed " << value);
 }
 
-std::unique_ptr<Memory> Loop::GetMemory(int pid)
+std::unique_ptr<Memory> Loop::GetMemory(const ProcessInfo& info)
 {
-    return monitor_.GetMemory(pid);
+    return monitor_.GetMemory(info);
 }
