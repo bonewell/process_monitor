@@ -1,25 +1,25 @@
-#include "gtest/gtest.h"
 #include "gmock/gmock-matchers.h"
+#include "gtest/gtest.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "dirreader.h"
+#include "proc_reader.h"
 
 using namespace ::testing;
 
-std::vector<std::string> read(DirReader& reader)
+std::vector<ProcessInfo> read(ProcReader& reader)
 {
-    std::vector<std::string> items;
+    std::vector<ProcessInfo> items;
     while (reader.HasNext()) {
         items.push_back(reader.Next());
     }
     return items;
 }
 
-TEST(DirReaderTest, RewindProc)
+TEST(ProcReaderTest, RewindProc)
 {
-    DirReader reader{"/proc"};
+    ProcReader reader{};
     auto before = read(reader);
     std::system("sleep 5 &");
     reader.Rewind();

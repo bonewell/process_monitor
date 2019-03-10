@@ -6,10 +6,15 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 add_executable(${PROJECT_NAME}
+    "loop.cpp"
     "main.cpp"
-    "runner.cpp"
-    "dirreader.cpp"
+    "memory_monitor.cpp"
+    "process_info.cpp"
+    "proc_memory.cpp"
+    "proc_reader.cpp"
     "process.cpp"
+    "signals.cpp"
+    "status_monitor.cpp"
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${PROJECT_NAME}
@@ -18,23 +23,27 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 enable_testing()
-set(UNIT_TEST ${PROJECT_NAME}_test)
+set(UNIT_TEST ${PROJECT_NAME}_unittest)
 add_executable(${UNIT_TEST}
-    "process.cpp"
-    "dirreader.cpp"
-    "process_test.cpp"
+    "memory_monitor.cpp"
+    "memory_monitor_test.cpp"
+    "process_info.cpp"
+    "status_monitor.cpp"
+    "status_monitor_test.cpp"
 )
 target_compile_features(${UNIT_TEST} PRIVATE cxx_std_11)
 target_link_libraries(${UNIT_TEST}
     CONAN_PKG::gtest
-    CONAN_PKG::log4cplus
 )
 add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
 
 set(AUTO_TEST ${PROJECT_NAME}_autotest)
 add_executable(${AUTO_TEST}
-    "dirreader.cpp"
-    "dirreader_test.cpp"
+    "proc_memory.cpp"
+    "proc_memory_test.cpp"
+    "proc_reader.cpp"
+    "proc_reader_test.cpp"
+    "process_info.cpp"
 )
 target_compile_features(${AUTO_TEST} PRIVATE cxx_std_11)
 target_link_libraries(${AUTO_TEST}

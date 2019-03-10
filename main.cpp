@@ -1,7 +1,10 @@
 #include <iostream>
 
 #include "logger.h"
-#include "runner.h"
+#include "loop.h"
+#include "proc_reader.h"
+#include "signals.h"
+#include "status_monitor.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,14 +13,17 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    Signals signals;
     LOGGER_INIT("log4cplus.ini");
 
-    Runner::ProcessNames names;
+    StatusMonitor::Names names;
     for (auto i = 1; i < argc; ++i) {
-        names.push_back(argv[i]);
+        names.emplace(argv[i]);
     }
 
-    Runner{names}.Run();
+    ProcReader ps;
+    StatusMonitor monitor{ps, names};
+    Loop loop{monitor};
 
-    return 0;
+    return signals.Wait();
 }
