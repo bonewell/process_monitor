@@ -9,8 +9,8 @@
 class ProcMemory : public Memory
 {
 public:
-    explicit ProcMemory(ProcessInfo info);
-    ~ProcMemory() override;
+    explicit ProcMemory(const ProcessInfo& info);
+    ~ProcMemory();
     const ProcessInfo& Info() const override;
     long long Total() override;
 

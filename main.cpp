@@ -3,8 +3,8 @@
 #include "logger.h"
 #include "loop.h"
 #include "proc_reader.h"
-#include "status_monitor.h"
 #include "signals.h"
+#include "status_monitor.h"
 
 int main(int argc, char *argv[])
 {
