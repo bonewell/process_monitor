@@ -10,11 +10,13 @@ namespace {
 const auto kMemoryLimit = 1000000;  // bytes
 }  // namespace
 
-MemoryMonitor::MemoryMonitor(Memory& memory, int pid)
-    : memory_{memory},
+MemoryMonitor::MemoryMonitor(std::unique_ptr<Memory> memory, int pid)
+    : memory_{std::move(memory)},
       pid_{pid}
 {
 }
+
+MemoryMonitor::~MemoryMonitor() = default;
 
 void MemoryMonitor::Subscribe(MemoryListener* listener)
 {
@@ -28,7 +30,7 @@ void MemoryMonitor::Unsubscribe(MemoryListener* listener)
 
 void MemoryMonitor::Measure()
 {
-    auto total = memory_.Total();
+    auto total = memory_->Total();
     if (abs(total - total_) > kMemoryLimit) {
         total_ = total;
         Notify();

@@ -1,14 +1,14 @@
 #include "process.h"
 
 #include "loop.h"
-#include "memory_listener.h"
+#include "memory_monitor.h"
 #include "proc_reader.h"
 
 Process::Process(int pid, Loop& loop)
     : pid_{pid},
-      loop_{loop}
+      loop_{loop},
+      thread_{&Process::Run, this}
 {
-    thread_ = std::thread{&Process::Run, this};
 }
 
 Process::~Process()
@@ -21,10 +21,12 @@ void Process::Run()
 {
     constexpr auto timeout = std::chrono::milliseconds(500);
 
-//    ProcMemory m;
+    MemoryMonitor monitor{loop_.GetMemory(pid_), pid_};
     running_ = true;
+    monitor.Subscribe(&loop_);
     while (running_) {
-
+        monitor.Measure();
         std::this_thread::sleep_for(timeout);
     }
+    monitor.Unsubscribe(&loop_);
 }

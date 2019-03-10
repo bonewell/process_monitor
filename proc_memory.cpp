@@ -21,6 +21,9 @@ long long ProcMemory::Total()
 {
     long long pages;
     ifs_ >> pages;
-    ifs_.seekg(0);
-    return getpagesize() * pages;
+    if (!ifs_.bad()) {
+        ifs_.seekg(0);
+        return getpagesize() * pages;
+    }
+    return 0;
 }

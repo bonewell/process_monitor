@@ -6,6 +6,7 @@
 #include <thread>
 #include <unordered_map>
 
+#include "memory.h"
 #include "memory_listener.h"
 #include "process.h"
 #include "status_listener.h"
@@ -16,11 +17,11 @@ class Loop : public StatusListener, public MemoryListener
 {
 public:
     explicit Loop(StatusMonitor& monitor);
-    void Start();
-    void Stop();
+    ~Loop() override;
     void OnStarted(int pid) override;
     void OnFinished(int pid) override;
     void OnMemoryChanged(int pid, long long) override;
+    std::unique_ptr<Memory> GetMemory(int pid);
 
 private:
     using Processes = std::unordered_map<int, std::unique_ptr<Process>>;

@@ -1,8 +1,11 @@
 #ifndef STATUS_MONITOR_H
 #define STATUS_MONITOR_H
 
+#include <memory>
 #include <string>
 #include <unordered_set>
+
+#include "memory.h"
 
 class ProcessTable;
 class StatusListener;
@@ -19,6 +22,7 @@ public:
     void Subscribe(StatusListener* listener);
     void Unsubscribe(StatusListener* listener);
     void Scan();
+    std::unique_ptr<Memory> GetMemory(int pid);
 
 private:
     inline Pids Collect() const;

@@ -11,14 +11,14 @@ Signals::Signals(std::initializer_list<int> signals)
   Unsubscribe();
 }
 
-void Signals::Wait() {
+int Signals::Wait() {
   sigset_t waitset;
   sigemptyset(&waitset);
   for (const auto& s: signals_) {
     sigaddset(&waitset, s);
   }
   int sig;
-  sigwait(&waitset, &sig);
+  return sigwait(&waitset, &sig);
 }
 
 void Signals::Unsubscribe() {

@@ -48,6 +48,11 @@ void StatusMonitor::Scan()
     swap(pids_, pids);
 }
 
+std::unique_ptr<Memory> StatusMonitor::GetMemory(int pid)
+{
+    return table_.GetMemory(pid);
+}
+
 StatusMonitor::Pids StatusMonitor::Collect() const
 {
     Pids pids;

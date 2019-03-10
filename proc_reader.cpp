@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "proc_memory.h"
+
 namespace {
 const std::string kProc = "/proc";
 const std::regex kPid{R"([0-9]+)"};
@@ -54,6 +56,11 @@ ProcessInfo ProcReader::Next()
 void ProcReader::Rewind()
 {
     rewinddir(dirp_);
+}
+
+std::unique_ptr<Memory> ProcReader::GetMemory(int pid)
+{
+    return std::unique_ptr<Memory>{new ProcMemory{pid}};
 }
 
 std::string ProcReader::GetName(const std::string& pid) const

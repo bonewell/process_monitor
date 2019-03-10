@@ -24,10 +24,6 @@ int main(int argc, char *argv[])
     ProcReader ps;
     StatusMonitor monitor{ps, names};
     Loop loop{monitor};
-    loop.Start();
 
-    signals.Wait();
-    loop.Stop();
-
-    return 0;
+    return signals.Wait();
 }

@@ -7,7 +7,7 @@ class Signals final {
 public:
     Signals();
     explicit Signals(std::initializer_list<int> signals);
-    void Wait();
+    int Wait();
 
 private:
     void Unsubscribe();

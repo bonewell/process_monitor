@@ -11,9 +11,10 @@ using ::testing::Return;
 
 TEST(MemoryMonitorTest, ExcessLimit)
 {
-    NiceMock<MockMemory> memory;
-    MemoryMonitor monitor{memory, 5};
-    ON_CALL(memory, Total()).WillByDefault(Return(1500000));
+    auto* mock = new NiceMock<MockMemory>{};
+    std::unique_ptr<Memory> memory{mock};
+    MemoryMonitor monitor{std::move(memory), 5};
+    ON_CALL(*mock, Total()).WillByDefault(Return(1500000));
 
     MockMemoryListener listener;
     monitor.Subscribe(&listener);
@@ -24,9 +25,10 @@ TEST(MemoryMonitorTest, ExcessLimit)
 
 TEST(MemoryMonitorTest, NotExcessLimit)
 {
-    NiceMock<MockMemory> memory;
-    MemoryMonitor monitor{memory, 5};
-    ON_CALL(memory, Total()).WillByDefault(Return(150000));
+    auto* mock = new NiceMock<MockMemory>{};
+    std::unique_ptr<Memory> memory{mock};
+    MemoryMonitor monitor{std::move(memory), 5};
+    ON_CALL(*mock, Total()).WillByDefault(Return(150000));
 
     MockMemoryListener listener;
     monitor.Subscribe(&listener);

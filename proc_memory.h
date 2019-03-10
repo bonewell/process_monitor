@@ -9,7 +9,7 @@ class ProcMemory : public Memory
 {
 public:
     explicit ProcMemory(int pid);
-    ~ProcMemory();
+    ~ProcMemory() override;
     long long Total() override;
 
 private:

@@ -8,13 +8,16 @@
 static LOGGER_INSTANCE("Process");
 
 Loop::Loop(StatusMonitor& monitor)
-    : monitor_{monitor}
+    : monitor_{monitor},
+      thread_{&Loop::Run, this}
 {
 }
 
-void Loop::Start()
+Loop::~Loop()
 {
-    thread_ = std::thread{&Loop::Run, this};
+    running_ = false;
+    thread_.join();
+    ps_.clear();
 }
 
 void Loop::Run()
@@ -28,12 +31,6 @@ void Loop::Run()
         std::this_thread::sleep_for(timeout);
     }
     monitor_.Unsubscribe(this);
-}
-
-void Loop::Stop()
-{
-    running_ = false;
-    thread_.join();
 }
 
 void Loop::OnStarted(int pid)
@@ -54,4 +51,9 @@ void Loop::OnMemoryChanged(int pid, long long value)
 {
     constexpr auto name = "<name>";
     LOGGER_INFO(name << " (" << pid << "): memory changed " << value);
+}
+
+std::unique_ptr<Memory> Loop::GetMemory(int pid)
+{
+    return monitor_.GetMemory(pid);
 }

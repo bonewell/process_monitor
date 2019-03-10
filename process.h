@@ -5,6 +5,7 @@
 #include <thread>
 
 class Loop;
+class MemoryMonitor;
 
 class Process
 {
