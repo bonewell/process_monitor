@@ -2,7 +2,10 @@
 #define MOCK_STATUS_LISTENER_H
 
 #include "gmock/gmock.h"
+
 #include "status_listener.h"
+
+struct ProcessInfo;
 
 class MockStatusListener : public StatusListener {
 public:

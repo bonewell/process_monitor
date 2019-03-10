@@ -6,9 +6,9 @@
 #include "status_listener.h"
 
 namespace {
-inline bool IsNotPresented(const StatusMonitor::Infos& pids,
+inline bool IsNotPresented(const StatusMonitor::Infos& infos,
                            const ProcessInfo& info) {
-    return pids.find(info) == std::end(pids);
+    return infos.find(info) == std::end(infos);
 }
 }
 
@@ -16,7 +16,7 @@ enum class TypeEvent { kStarted, kFinished };
 
 StatusMonitor::StatusMonitor(ProcessTable& table, Names names)
     : table_{table},
-      names_{names}
+      names_{std::move(names)}
 {
 }
 

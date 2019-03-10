@@ -2,8 +2,8 @@
 
 #include "logger.h"
 #include "memory_monitor.h"
-#include "status_monitor.h"
 #include "process_table.h"
+#include "status_monitor.h"
 
 static LOGGER_INSTANCE("Process");
 

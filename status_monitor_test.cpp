@@ -1,11 +1,11 @@
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include <vector>
 
-#include "status_monitor.h"
 #include "mock_process_table.h"
 #include "mock_status_listener.h"
+#include "status_monitor.h"
 
 using ::testing::_;
 using ::testing::Invoke;

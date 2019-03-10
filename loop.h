@@ -17,7 +17,7 @@ class Loop : public StatusListener, public MemoryListener
 {
 public:
     explicit Loop(StatusMonitor& monitor);
-    ~Loop() override;
+    ~Loop();
     void OnStarted(const ProcessInfo& info) override;
     void OnFinished(const ProcessInfo& info) override;
     void OnMemoryChanged(const ProcessInfo& info, long long value) override;

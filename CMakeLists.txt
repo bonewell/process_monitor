@@ -48,7 +48,6 @@ add_executable(${AUTO_TEST}
 target_compile_features(${AUTO_TEST} PRIVATE cxx_std_11)
 target_link_libraries(${AUTO_TEST}
     CONAN_PKG::gtest
-    CONAN_PKG::log4cplus
 )
 add_test(NAME ${AUTO_TEST} COMMAND ${AUTO_TEST})
 

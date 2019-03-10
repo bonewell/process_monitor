@@ -11,7 +11,7 @@ class ProcReader : public ProcessTable
 {
 public:
     explicit ProcReader();
-    ~ProcReader() override;
+    ~ProcReader();
     bool HasNext() override;
     ProcessInfo Next() override;
     void Rewind() override;
