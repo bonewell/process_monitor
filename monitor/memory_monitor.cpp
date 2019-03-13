@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cstdlib>
 
-#include "memory.h"
+#include "general/memory.h"
 #include "monitor/memory_listener.h"
 
 namespace {

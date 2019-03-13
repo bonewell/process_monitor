@@ -2,7 +2,7 @@
 #define MOCK_PROCESS_TABLE_H
 
 #include "gmock/gmock.h"
-#include "process_table.h"
+#include "general/process_table.h"
 
 class Memory;
 

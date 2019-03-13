@@ -6,6 +6,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 add_executable(${PROJECT_NAME}
+    "general/process_info.cpp"
     "loop.cpp"
     "main.cpp"
     "monitor/memory_monitor.cpp"
@@ -13,7 +14,6 @@ add_executable(${PROJECT_NAME}
     "proc/proc_memory.cpp"
     "proc/proc_reader.cpp"
     "process.cpp"
-    "process_info.cpp"
     "utils/signals.cpp"
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
@@ -28,11 +28,11 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 set(UNIT_TEST ${PROJECT_NAME}_unittest)
 add_executable(${UNIT_TEST}
+    "general/process_info.cpp"
     "monitor/memory_monitor.cpp"
     "monitor/memory_monitor_test.cpp"
     "monitor/status_monitor.cpp"
     "monitor/status_monitor_test.cpp"
-    "process_info.cpp"
 )
 target_compile_features(${UNIT_TEST} PRIVATE cxx_std_11)
 target_include_directories(${UNIT_TEST} PRIVATE
@@ -45,11 +45,11 @@ add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
 
 set(AUTO_TEST ${PROJECT_NAME}_autotest)
 add_executable(${AUTO_TEST}
+    "general/process_info.cpp"
     "proc/proc_memory.cpp"
     "proc/proc_memory_test.cpp"
     "proc/proc_reader.cpp"
     "proc/proc_reader_test.cpp"
-    "process_info.cpp"
 )
 target_compile_features(${AUTO_TEST} PRIVATE cxx_std_11)
 target_include_directories(${AUTO_TEST} PRIVATE

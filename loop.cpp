@@ -1,8 +1,8 @@
 #include "loop.h"
 
+#include "general/process_table.h"
 #include "monitor/memory_monitor.h"
 #include "monitor/status_monitor.h"
-#include "process_table.h"
 #include "utils/logger.h"
 
 static LOGGER_INSTANCE("Process");

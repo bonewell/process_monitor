@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <dirent.h>
-#include "process_table.h"
+#include "general/process_table.h"
 
 class Memory;
 

@@ -6,7 +6,7 @@
 #include <thread>
 #include <unordered_map>
 
-#include "memory.h"
+#include "general/memory.h"
 #include "monitor/memory_listener.h"
 #include "monitor/status_listener.h"
 #include "process.h"
