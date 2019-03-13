@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include "memory.h"
-#include "memory_listener.h"
+#include "monitor/memory_listener.h"
 
 namespace {
 const auto kMemoryLimit = 1000000;  // bytes

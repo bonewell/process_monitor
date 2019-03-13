@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "logger.h"
 #include "loop.h"
-#include "proc_reader.h"
-#include "signals.h"
-#include "status_monitor.h"
+#include "monitor/status_monitor.h"
+#include "proc/proc_reader.h"
+#include "utils/logger.h"
+#include "utils/signals.h"
 
 int main(int argc, char *argv[])
 {

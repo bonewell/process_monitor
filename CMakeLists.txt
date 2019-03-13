@@ -8,15 +8,18 @@ conan_basic_setup(TARGETS)
 add_executable(${PROJECT_NAME}
     "loop.cpp"
     "main.cpp"
-    "memory_monitor.cpp"
-    "process_info.cpp"
-    "proc_memory.cpp"
-    "proc_reader.cpp"
+    "monitor/memory_monitor.cpp"
+    "monitor/status_monitor.cpp"
+    "proc/proc_memory.cpp"
+    "proc/proc_reader.cpp"
     "process.cpp"
-    "signals.cpp"
-    "status_monitor.cpp"
+    "process_info.cpp"
+    "utils/signals.cpp"
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}
+)
 target_link_libraries(${PROJECT_NAME}
     CONAN_PKG::log4cplus
     pthread
@@ -25,13 +28,16 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 set(UNIT_TEST ${PROJECT_NAME}_unittest)
 add_executable(${UNIT_TEST}
-    "memory_monitor.cpp"
-    "memory_monitor_test.cpp"
+    "monitor/memory_monitor.cpp"
+    "monitor/memory_monitor_test.cpp"
+    "monitor/status_monitor.cpp"
+    "monitor/status_monitor_test.cpp"
     "process_info.cpp"
-    "status_monitor.cpp"
-    "status_monitor_test.cpp"
 )
 target_compile_features(${UNIT_TEST} PRIVATE cxx_std_11)
+target_include_directories(${UNIT_TEST} PRIVATE
+    ${CMAKE_SOURCE_DIR}
+)
 target_link_libraries(${UNIT_TEST}
     CONAN_PKG::gtest
 )
@@ -39,13 +45,16 @@ add_test(NAME ${UNIT_TEST} COMMAND ${UNIT_TEST})
 
 set(AUTO_TEST ${PROJECT_NAME}_autotest)
 add_executable(${AUTO_TEST}
-    "proc_memory.cpp"
-    "proc_memory_test.cpp"
-    "proc_reader.cpp"
-    "proc_reader_test.cpp"
+    "proc/proc_memory.cpp"
+    "proc/proc_memory_test.cpp"
+    "proc/proc_reader.cpp"
+    "proc/proc_reader_test.cpp"
     "process_info.cpp"
 )
 target_compile_features(${AUTO_TEST} PRIVATE cxx_std_11)
+target_include_directories(${AUTO_TEST} PRIVATE
+    ${CMAKE_SOURCE_DIR}
+)
 target_link_libraries(${AUTO_TEST}
     CONAN_PKG::gtest
 )
