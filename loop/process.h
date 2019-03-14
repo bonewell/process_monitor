@@ -4,7 +4,7 @@
 #include <atomic>
 #include <thread>
 
-#include "process_info.h"
+#include "general/process_info.h"
 
 class Loop;
 class MemoryMonitor;

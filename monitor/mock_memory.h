@@ -3,7 +3,7 @@
 
 #include "gmock/gmock.h"
 
-#include "memory.h"
+#include "general/memory.h"
 
 struct ProcessInfo;
 
