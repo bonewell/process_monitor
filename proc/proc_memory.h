@@ -3,8 +3,8 @@
 
 #include <fstream>
 
-#include "memory.h"
-#include "process_info.h"
+#include "general/memory.h"
+#include "general/process_info.h"
 
 class ProcMemory : public Memory
 {

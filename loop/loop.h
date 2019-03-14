@@ -6,10 +6,10 @@
 #include <thread>
 #include <unordered_map>
 
-#include "memory.h"
-#include "memory_listener.h"
+#include "general/memory.h"
+#include "monitor/memory_listener.h"
+#include "monitor/status_listener.h"
 #include "process.h"
-#include "status_listener.h"
 
 class StatusMonitor;
 

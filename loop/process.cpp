@@ -1,8 +1,8 @@
 #include "process.h"
 
 #include "loop.h"
-#include "memory_monitor.h"
-#include "proc_reader.h"
+#include "monitor/memory_monitor.h"
+#include "proc/proc_reader.h"
 
 Process::Process(const ProcessInfo& info, Loop& loop)
     : info_{info},

@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "process_table.h"
 #include "status_listener.h"
 
 namespace {

@@ -1,10 +1,10 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+#include "general/process_info.h"
 #include "memory_monitor.h"
 #include "mock_memory.h"
 #include "mock_memory_listener.h"
-#include "process_info.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

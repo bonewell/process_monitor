@@ -5,8 +5,8 @@
 #include <string>
 #include <unordered_set>
 
-#include "memory.h"
-#include "process_table.h"
+#include "general/memory.h"
+#include "general/process_table.h"
 
 class StatusListener;
 enum class TypeEvent;

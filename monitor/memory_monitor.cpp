@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <cstdlib>
 
-#include "memory.h"
-#include "memory_listener.h"
+#include "general/memory.h"
+#include "monitor/memory_listener.h"
 
 namespace {
 const auto kMemoryLimit = 1000000;  // bytes
