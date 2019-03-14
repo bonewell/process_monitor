@@ -7,13 +7,13 @@ conan_basic_setup(TARGETS)
 
 add_executable(${PROJECT_NAME}
     "general/process_info.cpp"
-    "loop.cpp"
+    "loop/loop.cpp"
+    "loop/process.cpp"
     "main.cpp"
     "monitor/memory_monitor.cpp"
     "monitor/status_monitor.cpp"
     "proc/proc_memory.cpp"
     "proc/proc_reader.cpp"
-    "process.cpp"
     "utils/signals.cpp"
 )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
