@@ -1,0 +1,101 @@
+@startuml
+
+enum TypeEvent {
+    kStarted
+    kFinished
+}
+
+class ProcessInfo << (S, lightblue) >> {
+    + int pid
+    + string name
+}
+
+interface Memory {
+    + Info() : ProcessInfo
+    + Total() : long long
+}
+interface ProcessTable {
+    + HasNext() : bool
+    + Next() : ProcessInfo
+    + Rewind()
+    + GetMemory(info : ProcessInfo) : Memory
+}
+interface StatusListener {
+    + OnStarted(info : ProcessInfo)
+    + OnFinished(info : ProcessInfo)
+}
+interface MemoryListener {
+    + OnMemoryChanged(info : ProcessInfo, value : long long)
+}
+
+class Loop {
+    - monitor_ : StatusMonitor
+    - running_ : bool
+    - thread_ : thread
+    - ps_ : map<int, Process>
+    + Loop(monitor : StatusMonitor)
+    - Run()
+}
+class Process {
+    - info_ : ProcessInfo
+    - loop_ : Loop
+    - running_ : bool
+    - thread_ : thread
+    + Process(info : ProcessInfo, loop : Loop)
+    - Run()
+}
+class ProcReader {
+    - dirp_ : DIR*
+    - current_pid_ : string
+    - GetName(pid : string)
+}
+class ProcMemory {
+    - info_ : ProcessInfo
+    - ifs_ : ifstream
+}
+class StatusMonitor{
+    - Collect() : set<ProcessInfo>
+    - IsInteresting(name : string) : bool
+    - NotifyAboutStarted(info : set<ProcessInfo>)
+    - NotifyAboutFinished(info : set<ProcessInfo>)
+    - Notify(info : ProcessInfo, event : TypeEvent)
+    - table_ : ProcessTable
+    - names_ : set<string>
+    - listeners_ : set<StatusListener>
+    - infos_ : set<ProcessInfo>
+    + StatusMonitor(table : ProcessTable, names : set<string>)
+    + Subscribe(listener : StatusListener)
+    + Unsubscribe(listener : StatusListener)
+    + Scan()
+    + GetMemory(info : ProcessInfo) : Memory
+}
+class MemoryMonitor{
+    - Notify()
+    - memory : Memory
+    - listeners_ : set<MemoryListener>
+    - total_ : long long
+    + MemoryMonitor(memory : Memory)
+    + Subscribe(listener : MonitorListener)
+    + Unsubscribe(listener : MonitorListener)
+    + Measure()
+}
+
+TypeEvent <. StatusMonitor
+StatusListener <|.. Loop
+MemoryListener <|.. Loop
+Loop o.. "1" StatusMonitor
+Loop o.. "1" MemoryMonitor
+Loop *. "*" Process
+Process .o Loop
+StatusListener <.. StatusMonitor
+StatusMonitor ..> ProcessTable
+MemoryListener <.. MemoryMonitor
+MemoryMonitor ..> Memory
+Memory <|.. ProcMemory
+ProcessTable <|.. ProcReader
+ProcessInfo <. ProcReader : create
+ProcReader .> ProcMemory : create
+'StatusMonitor ..> ProcessTable
+'MemoryMonitor ..> Memory
+
+@enduml

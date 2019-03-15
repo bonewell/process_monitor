@@ -1,0 +1,12 @@
+@startuml
+main -> Signals : create
+main <-- Signals: signals
+main -> main : read names
+main -> ProcReader : create
+main <-- ProcReader : ps
+main -> StatusMonitor : create(ps, names)
+main <-- StatusMonitor : monitor
+main -> Loop : create(monitor)
+main <-- Loop : loop
+main -> Signals : Wait()
+@enduml

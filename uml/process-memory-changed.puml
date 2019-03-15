@@ -1,0 +1,20 @@
+@startuml
+StatusMonitor -> Loop: OnStarted(info)
+Loop -> Process : create
+Process -> Loop : GetMemory(info)
+Process <-- Loop : memory
+Process -> MemoryMonitor : create(memory)
+Process -> MemoryMonitor : Subscribe(loop)
+loop
+    Process -> MemoryMonitor : Measure()
+    MemoryMonitor -> Memory : Total()
+    MemoryMonitor <-- Memory : total
+    opt abs(total_ - total) > kMemoryLimit
+        MemoryMonitor -> MemoryMonitor : swap(total_, total)
+        MemoryMonitor -> Memory : Info()
+        MemoryMonitor <-- Memory : info
+        MemoryMonitor -> MemoryListener : OnMemoryChanged(info, total_)
+    end
+end
+Process -> MemoryMonitor : Unsubscribe(loop)
+@enduml

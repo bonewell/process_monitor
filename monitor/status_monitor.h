@@ -27,13 +27,13 @@ public:
 private:
     inline Infos Collect() const;
     inline bool IsInteresting(const std::string& name) const;
-    inline void NotifyAboutStarted(const Infos& pids) const;
-    inline void NotifyAboutFinished(const Infos& pids) const;
+    inline void NotifyAboutStarted(const Infos& fresh_infos) const;
+    inline void NotifyAboutFinished(const Infos& fresh_infos) const;
     inline void Notify(const ProcessInfo& info, TypeEvent event) const;
     ProcessTable& table_;
     Names names_;
     Listeners listeners_;
-    Infos pids_;
+    Infos infos_;
 };
 
 #endif // STATUS_MONITOR_H

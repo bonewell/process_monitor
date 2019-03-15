@@ -42,10 +42,10 @@ void StatusMonitor::Notify(const ProcessInfo& info, TypeEvent event) const
 
 void StatusMonitor::Scan()
 {
-    auto pids = Collect();
-    NotifyAboutStarted(pids);
-    NotifyAboutFinished(pids);
-    swap(pids_, pids);
+    auto fresh_infos = Collect();
+    NotifyAboutStarted(fresh_infos);
+    NotifyAboutFinished(fresh_infos);
+    swap(infos_, fresh_infos);
 }
 
 std::unique_ptr<Memory> StatusMonitor::GetMemory(const ProcessInfo& info)
@@ -55,32 +55,32 @@ std::unique_ptr<Memory> StatusMonitor::GetMemory(const ProcessInfo& info)
 
 StatusMonitor::Infos StatusMonitor::Collect() const
 {
-    Infos pids;
+    Infos infos;
     table_.Rewind();
     while (table_.HasNext()) {
         auto info = table_.Next();
         if (IsInteresting(info.name)) {
-            pids.insert(info);
+            infos.insert(info);
         }
     }
-    return pids;
+    return infos;
 }
 
-void StatusMonitor::NotifyAboutStarted(const Infos& fresh_pids) const
+void StatusMonitor::NotifyAboutStarted(const Infos& fresh_infos) const
 {
-    std::for_each(std::begin(fresh_pids), std::end(fresh_pids),
+    std::for_each(std::begin(fresh_infos), std::end(fresh_infos),
                   [this](const ProcessInfo& fresh_info) {
-        if (IsNotPresented(pids_, fresh_info)) {
+        if (IsNotPresented(infos_, fresh_info)) {
             Notify(fresh_info, TypeEvent::kStarted);
         }
     });
 }
 
-void StatusMonitor::NotifyAboutFinished(const Infos& fresh_pids) const
+void StatusMonitor::NotifyAboutFinished(const Infos& fresh_infos) const
 {
-    std::for_each(std::begin(pids_), std::end(pids_),
-                  [this, &fresh_pids](const ProcessInfo& info) {
-        if (IsNotPresented(fresh_pids, info)) {
+    std::for_each(std::begin(infos_), std::end(infos_),
+                  [this, &fresh_infos](const ProcessInfo& info) {
+        if (IsNotPresented(fresh_infos, info)) {
             Notify(info, TypeEvent::kFinished);
         }
     });
