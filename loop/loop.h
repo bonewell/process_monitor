@@ -1,5 +1,5 @@
-#ifndef LOOP_H
-#define LOOP_H
+#ifndef LOOP_LOOP_H
+#define LOOP_LOOP_H
 
 #include <atomic>
 #include <memory>
@@ -11,25 +11,31 @@
 #include "monitor/status_listener.h"
 #include "process.h"
 
+namespace monitor {
 class StatusMonitor;
+}  // namespace monitor
 
-class Loop : public StatusListener, public MemoryListener
+namespace loop {
+
+class Loop : public monitor::StatusListener, public monitor::MemoryListener
 {
 public:
-    explicit Loop(StatusMonitor& monitor);
+    explicit Loop(monitor::StatusMonitor& monitor);
     ~Loop();
-    void OnStarted(const ProcessInfo& info) override;
-    void OnFinished(const ProcessInfo& info) override;
-    void OnMemoryChanged(const ProcessInfo& info, long long value) override;
-    std::unique_ptr<Memory> GetMemory(const ProcessInfo& info);
+    void OnStarted(const general::ProcessInfo& info) override;
+    void OnFinished(const general::ProcessInfo& info) override;
+    void OnMemoryChanged(const general::ProcessInfo& info, long long value) override;
+    std::unique_ptr<general::Memory> GetMemory(const general::ProcessInfo& info);
 
 private:
     using Processes = std::unordered_map<int, std::unique_ptr<Process>>;
     void Run();
-    StatusMonitor& monitor_;
+    monitor::StatusMonitor& monitor_;
     std::atomic_bool running_{false};
     std::thread thread_;
     Processes ps_;
 };
 
-#endif // LOOP_H
+}  // namespace loop
+
+#endif  // LOOP_LOOP_H

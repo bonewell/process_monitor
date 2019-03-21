@@ -5,15 +5,17 @@
 #include "status_listener.h"
 
 namespace {
-inline bool IsNotPresented(const StatusMonitor::Infos& infos,
-                           const ProcessInfo& info) {
+inline bool IsNotPresented(const monitor::StatusMonitor::Infos& infos,
+                           const general::ProcessInfo& info) {
     return infos.find(info) == std::end(infos);
 }
-}
+}  // namespace
+
+namespace monitor {
 
 enum class TypeEvent { kStarted, kFinished };
 
-StatusMonitor::StatusMonitor(ProcessTable& table, Names names)
+StatusMonitor::StatusMonitor(general::ProcessTable& table, Names names)
     : table_{table},
       names_{std::move(names)}
 {
@@ -29,7 +31,7 @@ void StatusMonitor::Unsubscribe(StatusListener* listener)
     listeners_.erase(listener);
 }
 
-void StatusMonitor::Notify(const ProcessInfo& info, TypeEvent event) const
+void StatusMonitor::Notify(const general::ProcessInfo& info, TypeEvent event) const
 {
     std::for_each(std::begin(listeners_), std::end(listeners_),
                   [&info, event](StatusListener* l) {
@@ -48,7 +50,7 @@ void StatusMonitor::Scan()
     swap(infos_, fresh_infos);
 }
 
-std::unique_ptr<Memory> StatusMonitor::GetMemory(const ProcessInfo& info)
+std::unique_ptr<general::Memory> StatusMonitor::GetMemory(const general::ProcessInfo& info)
 {
     return table_.GetMemory(info);
 }
@@ -69,7 +71,7 @@ StatusMonitor::Infos StatusMonitor::Collect() const
 void StatusMonitor::NotifyAboutStarted(const Infos& fresh_infos) const
 {
     std::for_each(std::begin(fresh_infos), std::end(fresh_infos),
-                  [this](const ProcessInfo& fresh_info) {
+                  [this](const general::ProcessInfo& fresh_info) {
         if (IsNotPresented(infos_, fresh_info)) {
             Notify(fresh_info, TypeEvent::kStarted);
         }
@@ -79,7 +81,7 @@ void StatusMonitor::NotifyAboutStarted(const Infos& fresh_infos) const
 void StatusMonitor::NotifyAboutFinished(const Infos& fresh_infos) const
 {
     std::for_each(std::begin(infos_), std::end(infos_),
-                  [this, &fresh_infos](const ProcessInfo& info) {
+                  [this, &fresh_infos](const general::ProcessInfo& info) {
         if (IsNotPresented(fresh_infos, info)) {
             Notify(info, TypeEvent::kFinished);
         }
@@ -90,3 +92,5 @@ bool StatusMonitor::IsInteresting(const std::string& name) const
 {
     return names_.find(name) != std::end(names_);
 }
+
+}  // namespace monitor

@@ -1,26 +1,28 @@
-#ifndef PROCESS_H
-#define PROCESS_H
+#ifndef LOOP_PROCESS_H
+#define LOOP_PROCESS_H
 
 #include <atomic>
 #include <thread>
 
 #include "general/process_info.h"
 
+namespace loop {
 class Loop;
-class MemoryMonitor;
 
 class Process
 {
 public:
-    Process(const ProcessInfo& info, Loop& loop);
+    Process(const general::ProcessInfo& info, Loop& loop);
     ~Process();
 
 private:
     void Run();
-    ProcessInfo info_;
+    general::ProcessInfo info_;
     Loop& loop_;
     std::atomic_bool running_{false};
     std::thread thread_;
 };
 
-#endif // PROCESS_H
+}  // namespace loop
+
+#endif  // LOOP_PROCESS_H

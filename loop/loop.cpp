@@ -7,7 +7,9 @@
 
 static LOGGER_INSTANCE("Process");
 
-Loop::Loop(StatusMonitor& monitor)
+namespace loop {
+
+Loop::Loop(monitor::StatusMonitor& monitor)
     : monitor_{monitor},
       thread_{&Loop::Run, this}
 {
@@ -33,24 +35,26 @@ void Loop::Run()
     monitor_.Unsubscribe(this);
 }
 
-void Loop::OnStarted(const ProcessInfo& info)
+void Loop::OnStarted(const general::ProcessInfo& info)
 {
     LOGGER_INFO(info.name << " (" << info.pid << "): started");
-    ps_.emplace(info.pid, std::unique_ptr<Process>{new Process{info, *this}});
+    ps_.emplace(info.pid, std::unique_ptr<Process>{new loop::Process{info, *this}});
 }
 
-void Loop::OnFinished(const ProcessInfo& info)
+void Loop::OnFinished(const general::ProcessInfo& info)
 {
     LOGGER_INFO(info.name << " (" << info.pid << "): finished");
     ps_.erase(info.pid);
 }
 
-void Loop::OnMemoryChanged(const ProcessInfo& info, long long value)
+void Loop::OnMemoryChanged(const general::ProcessInfo& info, long long value)
 {
     LOGGER_INFO(info.name << " (" << info.pid << "): memory changed " << value);
 }
 
-std::unique_ptr<Memory> Loop::GetMemory(const ProcessInfo& info)
+std::unique_ptr<general::Memory> Loop::GetMemory(const general::ProcessInfo& info)
 {
     return monitor_.GetMemory(info);
 }
+
+}  // namespace loop

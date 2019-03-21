@@ -1,5 +1,7 @@
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef GENERAL_MEMORY_H
+#define GENERAL_MEMORY_H
+
+namespace general {
 
 struct ProcessInfo;
 
@@ -10,4 +12,6 @@ public:
     virtual ~Memory() = default;
 };
 
-#endif // MEMORY_H
+}  // namespace general
+
+#endif  // GENERAL_MEMORY_H

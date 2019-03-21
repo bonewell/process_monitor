@@ -1,7 +1,9 @@
-#ifndef PROCESS_INFO_H
-#define PROCESS_INFO_H
+#ifndef GENERAL_PROCESS_INFO_H
+#define GENERAL_PROCESS_INFO_H
 
 #include <string>
+
+namespace general {
 
 struct ProcessInfo {
     int pid;
@@ -14,4 +16,6 @@ struct ProcessInfoHasher
   std::size_t operator()(const ProcessInfo& i) const;
 };
 
-#endif // PROCESS_INFO_H
+}  // namespace general
+
+#endif  // GENERAL_PROCESS_INFO_H

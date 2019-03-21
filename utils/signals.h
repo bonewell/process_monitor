@@ -1,7 +1,9 @@
-#ifndef SIGNALS_H
-#define SIGNALS_H
+#ifndef UTILS_SIGNALS_H
+#define UTILS_SIGNALS_H
 
 #include <vector>
+
+namespace utils {
 
 class Signals final {
 public:
@@ -14,4 +16,6 @@ private:
     std::vector<int> signals_;
 };
 
-#endif  // SIGNALS_H
+}  // namespace utils
+
+#endif  // UTILS_SIGNALS_H
