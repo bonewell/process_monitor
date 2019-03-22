@@ -1,0 +1,7 @@
+@startuml
+[loop] - [monitor]
+[monitor] ..> ProcessTable : use
+[monitor] ..> Memory : use
+ProcessTable -- [proc]
+Memory -- [proc]
+@enduml
