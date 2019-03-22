@@ -10,7 +10,9 @@ namespace {
 const auto kMemoryLimit = 1000000;  // bytes
 }  // namespace
 
-MemoryMonitor::MemoryMonitor(std::unique_ptr<Memory> memory)
+namespace monitor {
+
+MemoryMonitor::MemoryMonitor(std::unique_ptr<general::Memory> memory)
     : memory_{std::move(memory)}
 {
 }
@@ -43,3 +45,5 @@ void MemoryMonitor::Notify() const
         l->OnMemoryChanged(memory_->Info(), total_);
     });
 }
+
+}  // namespace monitor

@@ -11,13 +11,15 @@ using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
 
+namespace monitor {
+
 TEST(MemoryMonitorTest, ExcessLimit)
 {
-    auto* mock = new NiceMock<MockMemory>{};
-    std::unique_ptr<Memory> memory{mock};
+    auto* mock = new NiceMock<general::MockMemory>{};
+    std::unique_ptr<general::Memory> memory{mock};
     MemoryMonitor monitor{std::move(memory)};
     ON_CALL(*mock, Total()).WillByDefault(Return(1500000));
-    ProcessInfo info{5, "bash"};
+    general::ProcessInfo info{5, "bash"};
     ON_CALL(*mock, Info()).WillByDefault(ReturnRef(info));
 
     MockMemoryListener listener;
@@ -29,8 +31,8 @@ TEST(MemoryMonitorTest, ExcessLimit)
 
 TEST(MemoryMonitorTest, NotExcessLimit)
 {
-    auto* mock = new NiceMock<MockMemory>{};
-    std::unique_ptr<Memory> memory{mock};
+    auto* mock = new NiceMock<general::MockMemory>{};
+    std::unique_ptr<general::Memory> memory{mock};
     MemoryMonitor monitor{std::move(memory)};
     ON_CALL(*mock, Total()).WillByDefault(Return(150000));
 
@@ -40,3 +42,5 @@ TEST(MemoryMonitorTest, NotExcessLimit)
     EXPECT_CALL(listener, OnMemoryChanged(_, _)).Times(0);
     monitor.Measure();
 }
+
+}  // namespace monitor

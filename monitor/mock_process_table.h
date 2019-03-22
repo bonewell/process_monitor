@@ -1,8 +1,10 @@
-#ifndef MOCK_PROCESS_TABLE_H
-#define MOCK_PROCESS_TABLE_H
+#ifndef MONITOR_MOCK_PROCESS_TABLE_H
+#define MONITOR_MOCK_PROCESS_TABLE_H
 
 #include "gmock/gmock.h"
 #include "general/process_table.h"
+
+namespace general {
 
 class Memory;
 
@@ -14,4 +16,6 @@ public:
     MOCK_METHOD1(GetMemory, std::unique_ptr<Memory>(const ProcessInfo& info));
 };
 
-#endif // MOCK_PROCESS_TABLE_H
+}  // namespace general
+
+#endif // MONITOR_MOCK_PROCESS_TABLE_H

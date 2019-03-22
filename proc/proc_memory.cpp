@@ -7,7 +7,9 @@ const std::string kProc = "/proc/";
 const auto kStatm = "/statm";
 }  // namespace
 
-ProcMemory::ProcMemory(const ProcessInfo& info)
+namespace proc {
+
+ProcMemory::ProcMemory(const general::ProcessInfo& info)
     : info_{info}
 {
     const auto file = kProc + std::to_string(info_.pid) + kStatm;
@@ -19,7 +21,7 @@ ProcMemory::~ProcMemory()
     ifs_.close();
 }
 
-const ProcessInfo& ProcMemory::Info() const
+const general::ProcessInfo& ProcMemory::Info() const
 {
     return info_;
 }
@@ -34,3 +36,5 @@ long long ProcMemory::Total()
     }
     return 0;
 }
+
+}  // namespace proc

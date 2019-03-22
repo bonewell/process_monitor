@@ -8,9 +8,11 @@
 
 using namespace ::testing;
 
-std::vector<ProcessInfo> read(ProcReader& reader)
+namespace proc {
+
+std::vector<general::ProcessInfo> read(ProcReader& reader)
 {
-    std::vector<ProcessInfo> items;
+    std::vector<general::ProcessInfo> items;
     while (reader.HasNext()) {
         items.push_back(reader.Next());
     }
@@ -26,3 +28,5 @@ TEST(ProcReaderTest, RewindProc)
     auto after = read(reader);
     ASSERT_THAT(before, Ne(after));
 }
+
+}  // namespace proc

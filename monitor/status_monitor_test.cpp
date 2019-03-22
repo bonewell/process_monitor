@@ -12,6 +12,8 @@ using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::Return;
 
+namespace monitor {
+
 class ReturnHasNext {
 public:
     explicit ReturnHasNext(std::initializer_list<bool> has_next)
@@ -24,12 +26,12 @@ private:
 
 TEST(StatusMonitorTest, ProcessStarted)
 {
-    NiceMock<MockProcessTable> ps;
+    NiceMock<general::MockProcessTable> ps;
     StatusMonitor monitor{ps, {"bash"}};
 
     ReturnHasNext hasNext{true, false};
     ON_CALL(ps, HasNext()).WillByDefault(Invoke(std::ref(hasNext)));
-    ProcessInfo info{5, "bash"};
+    general::ProcessInfo info{5, "bash"};
     ON_CALL(ps, Next()).WillByDefault(Return(info));
 
     MockStatusListener listener;
@@ -41,12 +43,12 @@ TEST(StatusMonitorTest, ProcessStarted)
 
 TEST(StatusMonitorTest, ProcessFinished)
 {
-    NiceMock<MockProcessTable> ps;
+    NiceMock<general::MockProcessTable> ps;
     StatusMonitor monitor{ps, {"bash"}};
 
     ReturnHasNext hasNext{true, false};
     ON_CALL(ps, HasNext()).WillByDefault(Invoke(std::ref(hasNext)));
-    ProcessInfo info{5, "bash"};
+    general::ProcessInfo info{5, "bash"};
     ON_CALL(ps, Next()).WillByDefault(Return(info));
     monitor.Scan();  // find process started
 
@@ -59,12 +61,12 @@ TEST(StatusMonitorTest, ProcessFinished)
 
 TEST(StatusMonitorTest, ProcessAlreadyStarted)
 {
-    NiceMock<MockProcessTable> ps;
+    NiceMock<general::MockProcessTable> ps;
     StatusMonitor monitor{ps, {"bash"}};
 
     ReturnHasNext hasNext{true, false, true, false};
     ON_CALL(ps, HasNext()).WillByDefault(Invoke(std::ref(hasNext)));
-    ProcessInfo info{5, "bash"};
+    general::ProcessInfo info{5, "bash"};
     ON_CALL(ps, Next()).WillByDefault(Return(info));
 
     MockStatusListener listener;
@@ -74,3 +76,5 @@ TEST(StatusMonitorTest, ProcessAlreadyStarted)
     monitor.Scan();
     monitor.Scan();
 }
+
+}  // namespace monitor

@@ -1,16 +1,22 @@
-#ifndef MOCK_STATUS_LISTENER_H
-#define MOCK_STATUS_LISTENER_H
+#ifndef MONITOR_MOCK_STATUS_LISTENER_H
+#define MONITOR_MOCK_STATUS_LISTENER_H
 
 #include "gmock/gmock.h"
 
 #include "status_listener.h"
 
+namespace general {
 struct ProcessInfo;
+}  // namespace general
+
+namespace monitor {
 
 class MockStatusListener : public StatusListener {
 public:
-    MOCK_METHOD1(OnStarted, void(const ProcessInfo& info));
-    MOCK_METHOD1(OnFinished, void(const ProcessInfo& info));
+    MOCK_METHOD1(OnStarted, void(const general::ProcessInfo& info));
+    MOCK_METHOD1(OnFinished, void(const general::ProcessInfo& info));
 };
 
-#endif // MOCK_STATUS_LISTENER_H
+}  // namespace monitor
+
+#endif  // MONITOR_MOCK_STATUS_LISTENER_H

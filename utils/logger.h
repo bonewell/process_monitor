@@ -1,5 +1,5 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef UTILS_LOGGER_H
+#define UTILS_LOGGER_H
 
 #include "log4cplus/log4cplus.h"
 
@@ -28,4 +28,4 @@
 #define LOGGER_FATAL(message) \
   LOG4CPLUS_FATAL(logger, message)
 
-#endif  // LOGGER_H
+#endif  // UTILS_LOGGER_H

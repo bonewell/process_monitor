@@ -2,6 +2,8 @@
 
 #include <csignal>
 
+namespace utils {
+
 Signals::Signals()
     : Signals{ SIGINT, SIGTERM, SIGQUIT } {
 }
@@ -29,3 +31,5 @@ void Signals::Unsubscribe() {
   }
   pthread_sigmask(SIG_BLOCK, &signal_set, nullptr);
 }
+
+}  // namespace utils

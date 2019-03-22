@@ -1,0 +1,27 @@
+@startuml
+Loop -> StatusMonitor : Subscribe(this)
+loop
+    Loop -> StatusMonitor : Scan()
+    StatusMonitor -> ProcessTable : Rewind()
+    StatusMonitor -> StatusMonitor : create fresh_infos
+    loop while HasNext()
+        StatusMonitor -> ProcessTable : Next()
+        StatusMonitor <-- ProcessTable : info
+        opt IsInteresting(info.name)
+           StatusMonitor -> StatusMonitor : fresh_infos.insert(info)
+        end
+    end
+    loop fresh_info : fresh_infos
+        opt IsNotPresented(infos_, fresh_info)
+            StatusMonitor -> StatusListener : OnStarted(fresh_info)
+        end
+    end
+    loop info : infos_
+        opt IsNotPresented(fresh_infos, info)
+            StatusMonitor -> StatusListener : OnFinished(info)
+        end
+    end
+    StatusMonitor -> StatusMonitor : swap(infos_, fresh_infos)
+end
+Loop -> StatusMonitor : Unsubscribe(this)
+@enduml
