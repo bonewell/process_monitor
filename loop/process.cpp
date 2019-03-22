@@ -4,7 +4,9 @@
 #include "monitor/memory_monitor.h"
 #include "proc/proc_reader.h"
 
-Process::Process(const ProcessInfo& info, Loop& loop)
+namespace loop {
+
+Process::Process(const general::ProcessInfo& info, Loop& loop)
     : info_{info},
       loop_{loop},
       thread_{&Process::Run, this}
@@ -21,7 +23,7 @@ void Process::Run()
 {
     constexpr auto timeout = std::chrono::milliseconds(500);
 
-    MemoryMonitor monitor{loop_.GetMemory(info_)};
+    monitor::MemoryMonitor monitor{loop_.GetMemory(info_)};
     running_ = true;
     monitor.Subscribe(&loop_);
     while (running_) {
@@ -30,3 +32,5 @@ void Process::Run()
     }
     monitor.Unsubscribe(&loop_);
 }
+
+}  // namespace loop

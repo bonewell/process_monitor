@@ -1,22 +1,26 @@
-#ifndef PROC_MEMORY_H
-#define PROC_MEMORY_H
+#ifndef PROC_PROC_MEMORY_H
+#define PROC_PROC_MEMORY_H
 
 #include <fstream>
 
 #include "general/memory.h"
 #include "general/process_info.h"
 
-class ProcMemory : public Memory
+namespace proc {
+
+class ProcMemory : public general::Memory
 {
 public:
-    explicit ProcMemory(const ProcessInfo& info);
+    explicit ProcMemory(const general::ProcessInfo& info);
     ~ProcMemory();
-    const ProcessInfo& Info() const override;
+    const general::ProcessInfo& Info() const override;
     long long Total() override;
 
 private:
-    ProcessInfo info_;
+    general::ProcessInfo info_;
     std::ifstream ifs_;
 };
 
-#endif // PROC_MEMORY_H
+}  // namespace proc
+
+#endif  // PROC_PROC_MEMORY_H

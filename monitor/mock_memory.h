@@ -1,9 +1,11 @@
-#ifndef MOCK_MEMORY_H
-#define MOCK_MEMORY_H
+#ifndef MONITOR_MOCK_MEMORY_H
+#define MONITOR_MOCK_MEMORY_H
 
 #include "gmock/gmock.h"
 
 #include "general/memory.h"
+
+namespace general {
 
 struct ProcessInfo;
 
@@ -13,4 +15,6 @@ public:
     MOCK_METHOD0(Total, long long());
 };
 
-#endif // MOCK_MEMORY_H
+}  // namespace general
+
+#endif  // MONITOR_MOCK_MEMORY_H

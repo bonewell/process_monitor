@@ -1,5 +1,5 @@
-#ifndef PROC_READER_H
-#define PROC_READER_H
+#ifndef PROC_PROC_READER_H
+#define PROC_PROC_READER_H
 
 #include <memory>
 #include <dirent.h>
@@ -7,15 +7,17 @@
 
 class Memory;
 
-class ProcReader : public ProcessTable
+namespace proc {
+
+class ProcReader : public general::ProcessTable
 {
 public:
     explicit ProcReader();
     ~ProcReader();
     bool HasNext() override;
-    ProcessInfo Next() override;
+    general::ProcessInfo Next() override;
     void Rewind() override;
-    std::unique_ptr<Memory> GetMemory(const ProcessInfo& info) override;
+    std::unique_ptr<general::Memory> GetMemory(const general::ProcessInfo& info) override;
 
 private:
     std::string GetName(const std::string& pid) const;
@@ -23,4 +25,6 @@ private:
     std::string current_pid_;
 };
 
-#endif // PROC_READER_H
+}  // namespace proc
+
+#endif  // PROC_PROC_READER_H

@@ -13,17 +13,17 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    Signals signals;
+    utils::Signals signals;
     LOGGER_INIT("log4cplus.ini");
 
-    StatusMonitor::Names names;
+    monitor::StatusMonitor::Names names;
     for (auto i = 1; i < argc; ++i) {
         names.emplace(argv[i]);
     }
 
-    ProcReader ps;
-    StatusMonitor monitor{ps, names};
-    Loop loop{monitor};
+    proc::ProcReader ps;
+    monitor::StatusMonitor monitor{ps, names};
+    loop::Loop loop{monitor};
 
     return signals.Wait();
 }

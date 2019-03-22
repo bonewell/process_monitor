@@ -15,6 +15,8 @@ const std::string kProc = "/proc";
 const std::regex kPid{R"([0-9]+)"};
 }  // namespace
 
+namespace proc {
+
 ProcReader::ProcReader()
 {
     dirp_ = opendir(kProc.c_str());
@@ -47,7 +49,7 @@ bool ProcReader::HasNext()
     }
 }
 
-ProcessInfo ProcReader::Next()
+general::ProcessInfo ProcReader::Next()
 {
     auto name = GetName(current_pid_);
     return {std::stoi(current_pid_), name};
@@ -58,9 +60,9 @@ void ProcReader::Rewind()
     rewinddir(dirp_);
 }
 
-std::unique_ptr<Memory> ProcReader::GetMemory(const ProcessInfo& info)
+std::unique_ptr<general::Memory> ProcReader::GetMemory(const general::ProcessInfo& info)
 {
-    return std::unique_ptr<Memory>{new ProcMemory{info}};
+    return std::unique_ptr<general::Memory>{new ProcMemory{info}};
 }
 
 std::string ProcReader::GetName(const std::string& pid) const
@@ -71,3 +73,5 @@ std::string ProcReader::GetName(const std::string& pid) const
     ifs >> bin;
     return bin;
 }
+
+}  // namespace proc

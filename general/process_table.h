@@ -1,9 +1,11 @@
-#ifndef PROCESS_TABLE_H
-#define PROCESS_TABLE_H
+#ifndef GENERAL_PROCESS_TABLE_H
+#define GENERAL_PROCESS_TABLE_H
 
 #include <memory>
 #include <string>
 #include "process_info.h"
+
+namespace general {
 
 class Memory;
 
@@ -17,4 +19,6 @@ public:
     virtual ~ProcessTable() = default;
 };
 
-#endif // PROCESS_TABLE_H
+}  // namespace general
+
+#endif  // GENERAL_PROCESS_TABLE_H
