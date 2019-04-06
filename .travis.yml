@@ -1,0 +1,12 @@
+os: linux
+dist: bionic
+language: cpp
+compiler: gcc
+install:
+ - pip install --user conan
+ - conan user
+script:
+ - conan install -s compiler.libcxx=libstdc++11 --build missing .
+ - cmake .
+ - cmake --build .
+ - ctest
