@@ -1,0 +1,12 @@
+os: linux
+dist: bionic
+language: cpp
+compiler: gcc
+install:
+ - pip install --user conan
+ - conan user
+script:
+ - conan install .
+ - cmake .
+ - cmake --build .
+ - ctest
